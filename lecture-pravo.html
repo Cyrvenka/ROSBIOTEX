@@ -1,0 +1,115 @@
+<!-- Имя файла: lecture-pravo.html (Замените всё содержимое этого файла кодом ниже) -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лекция №1: Теория государства и права</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --color-lecture: #24335c; --text-lecture: #7096ff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
+        
+        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(0,122,255,0.18) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; pointer-events: none; }
+        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(92,219,125,0.1) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; pointer-events: none; }
+        @keyframes floatGlow1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.15); } }
+        @keyframes floatGlow2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, -50px) scale(1.1); } }
+
+        /* БОКОВАЯ ПАНЕЛЬ С ОТСТУПОМ 20px ДЛЯ КНОПОК КАК НА ВТОРОМ ФОТО */
+        .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .menu-item-wrapper { position: relative; display: flex; justify-content: center; width: 100%; margin-bottom: 20px; }
+        .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
+        .sidebar-btn.logo { background: linear-gradient(135deg, #007aff, #00f0ff); color: #fff; font-size: 20px; box-shadow: 0 4px 15px rgba(0,122,255,0.3); }
+        .sidebar-btn.active, .sidebar-btn:hover { color: var(--text-main); background-color: rgba(255,255,255,0.06); }
+        
+        .dropdown-menu { position: absolute; left: 65px; top: 0; background: rgba(20, 20, 22, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 4px; min-width: 170px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transform: translateX(-10px) scale(0.95); transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .menu-item-wrapper:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(0) scale(1); }
+        .dropdown-link { padding: 10px 14px; color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; transition: all 0.2s; text-align: left; }
+        .dropdown-link:hover { background-color: rgba(255,255,255,0.06); color: var(--text-main); padding-left: 18px; }
+
+        .main-content { flex-grow: 1; padding: 40px; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; position: relative; z-index: 10; height: 100vh; }
+        
+        .back-btn { align-self: flex-start; background-color: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 25px; transition: all 0.2s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .back-btn:hover { background-color: rgba(38, 38, 42, 0.75); transform: translateX(-2px); border-color: rgba(255, 255, 255, 0.15); }
+        
+        .doc-scroll { flex-grow: 1; overflow-y: auto; padding-right: 10px; line-height: 1.6; font-size: 15px; }
+        .doc-scroll::-webkit-scrollbar { width: 6px; }
+        .doc-scroll::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        .lecture-badge-box { background-color: var(--bg-card); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; margin-bottom: 25px; }
+        .lecture-badge-box h2 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .lecture-badge-box .meta-sub { font-size: 14px; color: var(--text-lecture); font-weight: 600; }
+
+        .doc-scroll h3 { font-size: 18px; font-weight: 600; margin: 25px 0 12px 0; color: var(--text-lecture); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        .doc-scroll ul { margin-left: 20px; margin-bottom: 15px; list-style-type: disc; }
+        .doc-scroll li { margin-bottom: 6px; }
+        .doc-scroll p { margin-bottom: 12px; color: #dddddd; }
+        .nested-list { margin-left: 20px; list-style-type: circle !important; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow-1"></div><div class="bg-glow-2"></div>
+    <div class="sidebar">
+        <a href="index.html" class="sidebar-btn logo">📚</a>
+        <div class="menu-item-wrapper">
+            <a href="notes.html" class="sidebar-btn active">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </a>
+            <div class="dropdown-menu">
+                <a href="notes.html" class="dropdown-link">Показать все</a>
+                <a href="notes-lectures.html" class="dropdown-link" style="color: var(--text-lecture);">📘 Лекции</a>
+                <a href="notes-practices.html" class="dropdown-link" style="color: var(--text-practice);">📙 Практика</a>
+                <a href="notes-labs.html" class="dropdown-link" style="color: var(--text-lab);">📗 Лабораторные</a>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <a href="notes-lectures.html" class="back-btn">← Назад к предметам</a>
+        
+        <div class="doc-scroll">
+            <div class="lecture-badge-box">
+                <h2>ЛЕКЦИЯ №1</h2>
+                <div class="meta-sub">Тема: Теория государства и права • 14 сентября</div>
+            </div>
+            <p style="margin-bottom: 20px;"><strong>Лектор:</strong> Назаров Андрей Александрович</p>
+
+            <h3>1. Основные понятия</h3>
+            <p>• <strong>Государство</strong> — политическая система, которая управляет обществом.</p>
+            <p>• <strong>Общество</strong> — совокупность людей, проживающих на определенной территории.</p>
+            <p>• <strong>Признаки государства:</strong></p>
+            <ul class="nested-list">
+                <li>1. Территория (суша, воздушное пространство до космоса, недра, прибрежные waters до 200 морских миль).</li>
+                <li>2. Население (граждане, лица без гражданства, иностранные граждане).</li>
+                <li>3. Публичная власть — власть, распространяющаяся на всех, с помощью которой государство управляет территориями и лицами.</li>
+                <li>4. Символы государства (герб, флаг и т.п.).</li>
+                <li>5. Органы государственной власти (законодательная — парламент, судебная — суды, исполнительная — правительство; власть может быть и объединена).</li>
+            </ul>
+
+            <h3>2. Формы государства (форма правления)</h3>
+            <p>• <strong>Монархия</strong> — власть возглавляет монарх, обычно передается по наследству, но бывает и выборная.</p>
+            <p>• <strong>Республика</strong> — глава государства (или заменяющий его орган) обычно избирается.</p>
+            <p>• <strong>Виды монархии:</strong></p>
+            <ul class="nested-list">
+                <li>Абсолютная — власть полностью сосредоточена в руках монарха.</li>
+                <li>Дуалистическая — монарх формирует правительство, но существует отдельная законодательная власть, независимая от монарха.</li>
+                <li>Конституционная — власть монарха ограничена и регулируется конституцией.</li>
+            </ul>
+            <p>• <strong>Виды республик:</strong></p>
+            <ul class="nested-list">
+                <li>Парламентская — правительство формируется парламентом.</li>
+                <li>Президентская — правительство формирует президент (пример: США).</li>
+                <li>Смешанная — правительство формируется и парламентом, и президентом (пример: РФ).</li>
+            </ul>
+
+            <h3>3. Формы территориального устройства</h3>
+            <p>• <strong>Унитарное государство</strong> — концентрация власти в центральных органах. Местным органам предоставлено право самоуправления.</p>
+            <p><em>Разновидность:</em> унитарное государство с автономией (на определенных территориях проживают группы людей с особыми признаками).</p>
+            <p>• <strong>Федерация</strong> — государство разделено на определенные части (субъекты), наделенные собственными полномочиями.</p>
+            <p>• <strong>Конфедерация</strong> — союз государства. Исторически неустойчивая модель (обычно объединяется в федерацию или распадается, пример: США изначально были конфедерацией). Часть полномочий передается органам конфедерации.</p>
+
+            <h3>4. Политический режим</h3>
+            <p>Характеризует способ осуществления власти.</p>
+            <ul>
