@@ -47,7 +47,7 @@
         .status-badge { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .status-dot { width: 8px; height: 8px; background: #7e7e86; border-radius: 50%; }
         .recording .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; }
-        .has-file .status-dot { background: #007aff; box-shadow: 0 0 8px #007aff; }
+        .has-file .status-dot { background: #5cdb7d; box-shadow: 0 0 8px #5cdb7d; }
 
         select { background: #111113; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; cursor: pointer; }
         .text-area-output { width: 100%; height: 320px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
@@ -69,7 +69,7 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Перевод загруженных аудиофайлов и голоса в текст (Локальный режим)</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Перевод загруженных аудиофайлов и голоса в текст (Хостинг-версия)</div></div>
         
         <div class="tools-container">
             <div class="controls-row">
@@ -118,13 +118,14 @@
         let isRecording = false;
         let isProcessingFile = false;
 
-        function startSpeechEngine() {
-            if (recognition) return true;
-            
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
 
-                recognition.onstart = () => {
+            recognition.onstart = () => {
+                statusRow.className = 'status-badge recording';
+            };
+
+            recognition.onerror = (e) => {
