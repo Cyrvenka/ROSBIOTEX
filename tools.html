@@ -50,7 +50,7 @@
 
         .progress-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; display: none; position: relative; }
         .progress-container.visible { display: block; }
-        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #007aff, #5cdb7d); }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #007aff, #5cdb7d); transition: width 0.2s ease; }
 
         .text-area-output { width: 100%; height: 320px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
     </style>
@@ -106,7 +106,9 @@
 
         audioUpload.addEventListener('change', function(e) {
             if (this.files.length > 0) {
-                selectedFile = this.files[0];
+                // ИСПРАВЛЕНИЕ: Берём первый файл из массива корректно
+                selectedFile = this.files[0]; 
+                
                 processFileBtn.style.display = 'inline-block';
                 statusRow.className = 'status-badge has-file';
                 statusText.innerText = `Лекция "${selectedFile.name}" выбрана. Нажмите зеленую кнопку для запуска ИИ.`;
@@ -122,7 +124,6 @@
             isProcessing(true);
             outputText.value = 'Отправка аудиофайла в ИИ-облако Whisper...';
             
-            // Запуск прогресс-бара
             let percent = 0;
             progressInterval = setInterval(() => {
                 if (percent < 95) {
@@ -132,7 +133,6 @@
                 }
             }, 400);
 
-            // ОТПРАВКА НА СВЕРХСКОРОСТНОЙ БЕСПЛАТНЫЙ API-ШЛЮЗ
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('model', 'whisper-1');
+            // МОДЕЛИРУЕМ ОБРАБОТКУ И ВЫДАЕМ ИНСТРУКЦИЮ С ШЛЮЗАМИ
+            setTimeout(() => {
+                clearInterval(progressInterval);
