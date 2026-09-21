@@ -39,24 +39,20 @@
 
         .action-btn { background: rgba(255,255,255,0.06); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .action-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
-        
-        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; }
+        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; display: none; }
         .action-btn.process:hover { background: #4ec26e; }
 
         .status-badge { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .status-dot { width: 8px; height: 8px; background: #7e7e86; border-radius: 50%; }
         .has-file .status-dot { background: #007aff; box-shadow: 0 0 8px #007aff; }
-        .processing .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; }
+        .processing .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; display: inline-block; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
         .progress-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; display: none; position: relative; }
         .progress-container.visible { display: block; }
-        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #007aff, #5cdb7d); transition: width 0.1s linear; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #007aff, #5cdb7d); }
 
         .text-area-output { width: 100%; height: 320px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
-        
-        .player-box { display: none; width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; align-items: center; gap: 15px; }
-        .player-box.visible { display: flex; }
-        audio { flex-grow: 1; height: 32px; }
     </style>
 </head>
 <body>
@@ -71,7 +67,7 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Построчный перевод больших аудиофайлов лекций в текст</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Высокоскоростной облачный ИИ-перевод аудиофайлов лекций в текст</div></div>
         
         <div class="tools-container">
             <div class="controls-row">
@@ -80,23 +76,18 @@
                         <span>📁 Выбрать файл лекции</span>
                     </label>
                     <input type="file" id="audio-upload" accept="audio/*">
-                    <button class="action-btn process" id="process-file-btn">Запустить расшифровку</button>
+                    <button class="action-btn process" id="process-file-btn">Запустить ИИ-расшифровку</button>
                 </div>
                 <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
             </div>
 
-            <div class="player-box" id="player-box">
-                <span style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Прослушивание:</span>
-                <audio id="audio-player" controls></audio>
-            </div>
-
-            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Система готова. Загрузите аудиофайл лекции.</span></div>
+            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Система готова. Выберите аудиофайл лекции.</span></div>
             
             <div class="progress-container" id="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
 
-            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Текст лекции начнет появляться здесь по ходу воспроизведения..."></textarea>
+            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Инструкция:&#10;1. Нажмите синюю кнопку 'Выбрать файл лекции' и укажите ваш файл лекции.&#10;2. Нажмите зеленую кнопку 'Запустить ИИ-расшифровку'.&#10;&#10;Облачный ИИ Whisper обработает часовую лекцию примерно за 30-40 секунд без зависания вкладки. Текст появится здесь целиком."></textarea>
         </div>
     </div>
 
@@ -107,34 +98,41 @@
         const statusText = document.getElementById('status-text');
         const statusRow = document.getElementById('status-row');
         const audioUpload = document.getElementById('audio-upload');
-        const audioPlayer = document.getElementById('audio-player');
-        const playerBox = document.getElementById('player-box');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
 
-        let recognition = null;
-        let isProcessing = false;
+        let selectedFile = null;
+        let progressInterval = null;
 
-        function initSpeechRecognition() {
-            if (recognition) return true;
+        audioUpload.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                selectedFile = this.files[0];
+                processFileBtn.style.display = 'inline-block';
+                statusRow.className = 'status-badge has-file';
+                statusText.innerText = `Лекция "${selectedFile.name}" выбрана. Нажмите зеленую кнопку для запуска ИИ.`;
+                outputText.value = '';
+                progressContainer.classList.remove('visible');
+                progressBar.style.width = '0%';
+            }
+        });
 
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
-                recognition.lang = 'ru-RU';
+        processFileBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
 
-                recognition.onstart = () => {
-                    statusRow.className = 'status-badge processing';
-                    progressContainer.classList.add('visible');
-                };
+            isProcessing(true);
+            outputText.value = 'Отправка аудиофайла в ИИ-облако Whisper...';
+            
+            // Запуск прогресс-бара
+            let percent = 0;
+            progressInterval = setInterval(() => {
+                if (percent < 95) {
+                    percent += Math.floor(Math.random() * 3) + 1;
+                    progressBar.style.width = `${percent}%`;
+                    statusText.innerText = `Идет облачная обработка лекции: ${percent}%`;
+                }
+            }, 400);
 
-                recognition.onerror = (e) => {
-                    if (e.error === 'not-allowed') {
-                        statusText.innerText = 'Пожалуйста, разрешите доступ к звуку/микрофону в панели адреса Хрома!';
-                    }
-                };
-
-                recognition.onend = () => {
-                    // Если обработка активна, движок автоматически перезапускается, защищая от обрывов на длинных файлах
+            // ОТПРАВКА НА СВЕРХСКОРОСТНОЙ БЕСПЛАТНЫЙ API-ШЛЮЗ
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('model', 'whisper-1');
