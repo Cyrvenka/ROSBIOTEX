@@ -40,10 +40,8 @@
         .action-btn { background: rgba(255,255,255,0.06); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .action-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
         
-        /* ЗЕЛЕНАЯ КНОПКА ГОТОВА СРАЗУ И ЖДЕТ ЗАГРУЗКИ */
-        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; opacity: 0.5; cursor: not-allowed; }
-        .action-btn.process.active { opacity: 1; cursor: pointer; display: inline-block !important; }
-        .action-btn.process.active:hover { background: #4ec26e; }
+        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; }
+        .action-btn.process:hover { background: #4ec26e; }
 
         .status-badge { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .status-dot { width: 8px; height: 8px; background: #7e7e86; border-radius: 50%; }
@@ -73,7 +71,7 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Построчный перевод речи из аудиофайла в текст</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Построчный перевод больших аудиофайлов лекций в текст</div></div>
         
         <div class="tools-container">
             <div class="controls-row">
@@ -82,7 +80,7 @@
                         <span>📁 Выбрать файл лекции</span>
                     </label>
                     <input type="file" id="audio-upload" accept="audio/*">
-                    <button class="action-btn process" id="process-file-btn" disabled>Запустить расшифровку</button>
+                    <button class="action-btn process" id="process-file-btn">Запустить расшифровку</button>
                 </div>
                 <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
             </div>
@@ -117,20 +115,26 @@
         let recognition = null;
         let isProcessing = false;
 
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'ru-RU';
+        function initSpeechRecognition() {
+            if (recognition) return true;
 
-            recognition.onstart = () => {
-                statusRow.className = 'status-badge processing';
-                progressContainer.classList.add('visible');
-            };
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'ru-RU';
 
-            recognition.onerror = (e) => {
-                if (e.error === 'not-allowed') {
-                    statusText.innerText = 'Разрешите доступ к звуку/микрофону в строке браузера (нажмите на иконку настроек слева от URL)!';
-                } else {
-                    statusText.innerText = 'Поток запущен. Начните воспроизведение в плеере.';
+                recognition.onstart = () => {
+                    statusRow.className = 'status-badge processing';
+                    progressContainer.classList.add('visible');
+                };
+
+                recognition.onerror = (e) => {
+                    if (e.error === 'not-allowed') {
+                        statusText.innerText = 'Пожалуйста, разрешите доступ к звуку/микрофону в панели адреса Хрома!';
+                    }
+                };
+
+                recognition.onend = () => {
+                    // Если обработка активна, движок автоматически перезапускается, защищая от обрывов на длинных файлах
