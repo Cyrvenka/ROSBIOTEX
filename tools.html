@@ -77,12 +77,11 @@
                 <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
             </div>
 
-            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Инициализация модуля перевода...</span></div>
+            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Инициализация нейросети...</span></div>
             <textarea class="text-area-output" id="output-textarea" readonly placeholder="Здесь будет появляться текст вашей лекции..."></textarea>
         </div>
     </div>
 
-    <!-- ПОДКЛЮЧАЕМ СТАБИЛЬНЫЙ АВТОНОМНЫЙ ДВИЖОК РАСПОЗНАВАНИЯ -->
     <script type="module">
         import { pipeline } from 'https://jsdelivr.net';
 
@@ -96,14 +95,22 @@
         let transcriber = null;
         let audioBuffer = null;
 
-        // ЗАГРУЗКА ЛЕГКОВЕСНОЙ МОДЕЛИ ПРЯМО В БРАУЗЕР
         async function loadModel() {
             try {
                 statusRow.className = 'status-badge loading';
-                statusText.innerText = 'Загрузка языкового ядра распознавания...';
-                transcriber = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny');
+                statusText.innerText = 'Загрузка нейросети (это займет около 15 секунд)...';
+                
+                // Используем Whisper с кастомным колбэком для прогресс-бара
+                transcriber = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny', {
+                    progress_callback: (data) => {
+                        if (data.status === 'progress') {
+                            statusText.innerText = `Загрузка файлов ИИ: ${Math.round(data.progress)}%`;
+                        }
+                    }
+                });
+                
                 statusRow.className = 'status-badge';
-                statusText.innerText = 'Модуль успешно загружен. Выберите файл для перевода.';
+                statusText.innerText = 'Нейросеть готова. Загрузите аудиофайл лекции.';
             } catch (err) {
                 statusText.innerText = 'Ошибка инициализации ядра.';
             }
@@ -115,7 +122,8 @@
             if (!file) return;
 
             statusRow.className = 'status-badge loading';
-            statusText.innerText = 'Чтение аудиофайла в память устройства...';
+            statusText.innerText = 'Чтение аудиофайла...';
+            outputText.value = '';
 
             const reader = new FileReader();
             reader.onload = async function(event) {
@@ -124,9 +132,9 @@
                     audioBuffer = await audioCtx.decodeAudioData(event.target.result);
                     processFileBtn.style.display = 'inline-block';
                     statusRow.className = 'status-badge has-file';
-                    statusText.innerText = `Лекция "${file.name}" готова к переводу в текст.`;
+                    statusText.innerText = `Лекция "${file.name}" успешно загружена. Нажмите кнопку "Запустить перевод".`;
                 } catch(err) {
-                    statusText.innerText = 'Неподдерживаемый формат аудио. Попробуйте MP3 или WAV.';
+                    statusText.innerText = 'Ошибка чтения файла. Используйте чистый MP3 или WAV.';
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -136,10 +144,3 @@
             if (!transcriber || !audioBuffer) return;
 
             statusRow.className = 'status-badge processing';
-            statusText.innerText = 'Нейросеть расшифровывает запись... Пожалуйста, подождите.';
-            outputText.value = 'Анализирую звуковую дорожку лекции...';
-
-            try {
-                const rawData = audioBuffer.getChannelData(0);
-                const response = await transcriber(rawData, {
-                    chunk_length_s: 30,
