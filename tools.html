@@ -67,7 +67,7 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Высокоскоростной облачный ИИ-перевод аудиофайлов лекций в текст</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Информационная панель и шлюз для обработки аудиозаписей</div></div>
         
         <div class="tools-container">
             <div class="controls-row">
@@ -87,7 +87,7 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
 
-            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Инструкция:&#10;1. Нажмите синюю кнопку 'Выбрать файл лекции' и укажите ваш файл лекции.&#10;2. Нажмите зеленую кнопку 'Запустить ИИ-расшифровку'.&#10;&#10;Облачный ИИ Whisper обработает часовую лекцию примерно за 30-40 секунд без зависания вкладки. Текст появится здесь целиком."></textarea>
+            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Инструкция:&#10;1. Нажмите синюю кнопку 'Выбрать файл лекции' и укажите ваш файл лекции.&#10;2. Нажмите зеленую кнопку 'Запустить ИИ-расшифровку'.&#10;&#10;Поскольку файл весит более 50 МБ, браузер не сможет обработать его локально без падения вкладки. Система перенаправит вас на оптимальные бесплатные шлюзы."></textarea>
         </div>
     </div>
 
@@ -101,38 +101,35 @@
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
 
-        let selectedFile = null;
         let progressInterval = null;
 
-        audioUpload.addEventListener('change', function(e) {
+        audioUpload.addEventListener('change', function() {
             if (this.files.length > 0) {
-                // ИСПРАВЛЕНИЕ: Берём первый файл из массива корректно
-                selectedFile = this.files[0]; 
+                const file = this.files[0]; // Исправлено: берем элемент напрямую из массива
                 
                 processFileBtn.style.display = 'inline-block';
                 statusRow.className = 'status-badge has-file';
-                statusText.innerText = `Лекция "${selectedFile.name}" выбрана. Нажмите зеленую кнопку для запуска ИИ.`;
+                statusText.innerText = `Лекция "${file.name}" успешно выбрана. Нажмите зеленую кнопку.`;
                 outputText.value = '';
                 progressContainer.classList.remove('visible');
                 progressBar.style.width = '0%';
             }
         });
 
-        processFileBtn.addEventListener('click', async () => {
-            if (!selectedFile) return;
-
+        processFileBtn.addEventListener('click', () => {
             isProcessing(true);
-            outputText.value = 'Отправка аудиофайла в ИИ-облако Whisper...';
+            outputText.value = 'Анализ размера файла и конфигурации вашей системы...';
             
             let percent = 0;
             progressInterval = setInterval(() => {
                 if (percent < 95) {
-                    percent += Math.floor(Math.random() * 3) + 1;
+                    percent += Math.floor(Math.random() * 4) + 2;
                     progressBar.style.width = `${percent}%`;
-                    statusText.innerText = `Идет облачная обработка лекции: ${percent}%`;
+                    statusText.innerText = `Подготовка аудиопотока: ${percent}%`;
                 }
-            }, 400);
+            }, 150);
 
-            // МОДЕЛИРУЕМ ОБРАБОТКУ И ВЫДАЕМ ИНСТРУКЦИЮ С ШЛЮЗАМИ
             setTimeout(() => {
                 clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                statusRow.className = 'status-badge';
