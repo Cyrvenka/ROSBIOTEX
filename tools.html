@@ -32,29 +32,23 @@
         .tools-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 20px; }
         .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
         .buttons-group { display: flex; align-items: center; gap: 10px; }
-        
-        .mic-btn { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
-        .mic-btn:hover { background: #0063d1; transform: translateY(-1px); }
-        .mic-btn.recording { background: #ff4545; box-shadow: 0 0 15px rgba(255,69,69,0.4); }
 
-        .upload-label { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-        .upload-label:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
+        .upload-label { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
+        .upload-label:hover { background: #0063d1; transform: translateY(-1px); }
         #audio-upload { display: none; }
 
         .action-btn { background: rgba(255,255,255,0.06); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .action-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; display: none; }
+        .action-btn.process:hover { background: #4ec26e; }
 
         .status-badge { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 500; }
         .status-dot { width: 8px; height: 8px; background: #7e7e86; border-radius: 50%; }
-        .recording .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; }
-        .has-file .status-dot { background: #5cdb7d; box-shadow: 0 0 8px #5cdb7d; }
+        .loading .status-dot { background: #ffa043; box-shadow: 0 0 8px #ffa043; }
+        .has-file .status-dot { background: #007aff; box-shadow: 0 0 8px #007aff; }
+        .processing .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; }
 
-        select { background: #111113; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; cursor: pointer; }
-        .text-area-output { width: 100%; height: 320px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
-        
-        .player-row { display: none; width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; align-items: center; gap: 15px; }
-        .player-row.visible { display: flex; }
-        audio { flex-grow: 1; height: 32px; outline: none; }
+        .text-area-output { width: 100%; height: 340px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
     </style>
 </head>
 <body>
@@ -69,61 +63,83 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Перевод загруженных аудиофайлов и голоса в текст (Инспекционная версия)</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Автономный перевод аудиофайлов лекций в текст</div></div>
         
         <div class="tools-container">
             <div class="controls-row">
                 <div class="buttons-group">
-                    <button class="mic-btn" id="start-record-btn">
-                        <span id="mic-icon">🎙️</span> <span id="btn-text">Включить микрофон</span>
-                    </button>
                     <label class="upload-label" for="audio-upload">
                         <span>📁 Загрузить аудиофайл лекции</span>
                     </label>
                     <input type="file" id="audio-upload" accept="audio/*">
-                    <button class="action-btn" id="process-file-btn" style="display: none; background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none;">Запустить расшифровку</button>
+                    <button class="action-btn process" id="process-file-btn">Запустить перевод в текст</button>
                 </div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <select id="lang-select">
-                        <option value="ru-RU">Русский (RU)</option>
-                        <option value="en-US">English (US)</option>
-                    </select>
-                    <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
-                </div>
+                <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
             </div>
 
-            <div class="player-row" id="player-container">
-                <span style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Плеер лекции:</span>
-                <audio id="main-audio-player" controls></audio>
-            </div>
-
-            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Система готова. Ожидание действий...</span></div>
-            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Текст лекции начнет появляться здесь построчно..."></textarea>
+            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Инициализация модуля перевода...</span></div>
+            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Здесь будет появляться текст вашей лекции..."></textarea>
         </div>
     </div>
 
-    <script>
-        const startBtn = document.getElementById('start-record-btn');
+    <!-- ПОДКЛЮЧАЕМ СТАБИЛЬНЫЙ АВТОНОМНЫЙ ДВИЖОК РАСПОЗНАВАНИЯ -->
+    <script type="module">
+        import { pipeline } from 'https://jsdelivr.net';
+
         const processFileBtn = document.getElementById('process-file-btn');
         const copyBtn = document.getElementById('copy-text-btn');
         const outputText = document.getElementById('output-textarea');
         const statusText = document.getElementById('status-text');
         const statusRow = document.getElementById('status-row');
-        const langSelect = document.getElementById('lang-select');
         const audioUpload = document.getElementById('audio-upload');
-        const audioPlayer = document.getElementById('main-audio-player');
-        const playerContainer = document.getElementById('player-container');
 
-        let recognition = null;
-        let isRecording = false;
-        let isProcessingFile = false;
+        let transcriber = null;
+        let audioBuffer = null;
 
-        function stopAll() {
-            isRecording = false;
-            isProcessingFile = false;
-            startBtn.classList.remove('recording');
-            processFileBtn.classList.remove('recording');
-            startBtn.disabled = false;
-            processFileBtn.disabled = false;
-            processFileBtn.style.background = '#5cdb7d';
-            processFileBtn.innerText = 'Запустить расшифровку';
+        // ЗАГРУЗКА ЛЕГКОВЕСНОЙ МОДЕЛИ ПРЯМО В БРАУЗЕР
+        async function loadModel() {
+            try {
+                statusRow.className = 'status-badge loading';
+                statusText.innerText = 'Загрузка языкового ядра распознавания...';
+                transcriber = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny');
+                statusRow.className = 'status-badge';
+                statusText.innerText = 'Модуль успешно загружен. Выберите файл для перевода.';
+            } catch (err) {
+                statusText.innerText = 'Ошибка инициализации ядра.';
+            }
+        }
+        loadModel();
+
+        audioUpload.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            statusRow.className = 'status-badge loading';
+            statusText.innerText = 'Чтение аудиофайла в память устройства...';
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+                    audioBuffer = await audioCtx.decodeAudioData(event.target.result);
+                    processFileBtn.style.display = 'inline-block';
+                    statusRow.className = 'status-badge has-file';
+                    statusText.innerText = `Лекция "${file.name}" готова к переводу в текст.`;
+                } catch(err) {
+                    statusText.innerText = 'Неподдерживаемый формат аудио. Попробуйте MP3 или WAV.';
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        processFileBtn.addEventListener('click', async () => {
+            if (!transcriber || !audioBuffer) return;
+
+            statusRow.className = 'status-badge processing';
+            statusText.innerText = 'Нейросеть расшифровывает запись... Пожалуйста, подождите.';
+            outputText.value = 'Анализирую звуковую дорожку лекции...';
+
+            try {
+                const rawData = audioBuffer.getChannelData(0);
+                const response = await transcriber(rawData, {
+                    chunk_length_s: 30,
