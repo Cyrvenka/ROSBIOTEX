@@ -39,11 +39,15 @@
         .card { display: flex; background-color: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; flex-direction: column; gap: 10px; position: relative; }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
-        .subject-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--theme-color); }
+        /* НАЗВАНИЕ ПРЕДМЕТА СТАЛО ЧИСТО БЕЛЫМ */
+        .subject-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: #ffffff; }
+        /* ПЛАШКА-ТЕГ ТЕПЕРЬ С НАДПИСЬЮ ЛАБОРАТОРНАЯ */
         .tag { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; background-color: var(--badge-bg); color: var(--theme-color); }
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
+        /* ТЕКСТ ИЗМЕНЕН НА 1 СЕМЕСТР */
         .semester-info { font-size: 13px; color: var(--text-muted); }
+        /* КНОПКА СТАЛА СЕРОЙ */
         .action-link { font-size: 13px; color: var(--text-muted); font-weight: 600; cursor: pointer; text-decoration: none; transition: color 0.2s; }
         .action-link:hover { color: #fff; text-decoration: underline; }
 
@@ -79,10 +83,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="subject-title">Информационные системы и технологии</div>
-                    <span class="tag">ИСТ</span>
+                    <span class="tag">ЛАБОРАТОРНАЯ</span>
                 </div>
                 <div class="card-footer">
-                    <span class="semester-info">Модуль 1</span>
+                    <span class="semester-info">1 семестр</span>
                     <span class="action-link" onclick="toggleDropdown('ist-labs')">Открыть лабораторные →</span>
                 </div>
                 <div class="labs-dropdown" id="ist-labs">
@@ -94,10 +98,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="subject-title">Неорганическая химия</div>
-                    <span class="tag">Химия</span>
+                    <span class="tag">ЛАБОРАТОРНАЯ</span>
                 </div>
                 <div class="card-footer">
-                    <span class="semester-info">Модуль 1</span>
+                    <span class="semester-info">1 семестр</span>
                     <span class="action-link" onclick="toggleDropdown('chem-labs')">Открыть лабораторные →</span>
                 </div>
                 <div class="labs-dropdown" id="chem-labs">
