@@ -29,10 +29,31 @@
         h1 a { text-decoration: none; color: inherit; }
         .subtitle { color: var(--text-muted); font-size: 14px; }
 
-        .tools-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; height: calc(100vh - 160px); overflow: hidden; }
+        .tools-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 20px; }
+        .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+        .buttons-group { display: flex; align-items: center; gap: 12px; }
+
+        .upload-label { background: #007aff; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
+        .upload-label:hover { background: #0063d1; transform: translateY(-1px); }
+        #audio-upload { display: none; }
+
+        .action-btn { background: rgba(255,255,255,0.06); color: var(--text-main); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .action-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
         
-        /* ОБЛАЧНЫЙ ИИ-ИНТЕРФЕЙС БЕЗ НАГРУЗКИ НА ПК */
-        iframe { width: 100%; height: 100%; border: none; border-radius: 12px; background: #0b0b0f; }
+        .action-btn.process { background: #5cdb7d; color: #0a0a0c; font-weight: 700; border: none; display: none; }
+        .action-btn.process:hover { background: #4ec26e; }
+
+        .status-badge { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .status-dot { width: 8px; height: 8px; background: #7e7e86; border-radius: 50%; }
+        .has-file .status-dot { background: #007aff; box-shadow: 0 0 8px #007aff; }
+        .processing .status-dot { background: #ff4545; box-shadow: 0 0 8px #ff4545; display: inline-block; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        .progress-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; display: none; position: relative; }
+        .progress-container.visible { display: block; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #007aff, #5cdb7d); transition: width 0.1s linear; }
+
+        .text-area-output { width: 100%; height: 320px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
     </style>
 </head>
 <body>
@@ -47,18 +68,76 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Автономное ИИ-распознавание аудиофайлов лекций в текст (Облачный Whisper)</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Локальная расшифровка аудиозаписей лекций в текст</div></div>
         
         <div class="tools-container">
-            <!-- Стабильный облачный ИИ-движок без блокировок и без связи с ПК -->
-            <iframe src="https://hf.space" allow="microphone"></iframe>
+            <div class="controls-row">
+                <div class="buttons-group">
+                    <label class="upload-label" for="audio-upload">
+                        <span>📁 Выбрать файл лекции</span>
+                    </label>
+                    <input type="file" id="audio-upload" accept="audio/*">
+                    <button class="action-btn process" id="process-file-btn">Запустить расшифровку</button>
+                </div>
+                <button class="action-btn" id="copy-text-btn">Скопировать текст</button>
+            </div>
+
+            <audio id="internal-audio-engine" style="display:none;"></audio>
+
+            <div class="status-badge" id="status-row"><div class="status-dot"></div><span id="status-text">Система готова. Загрузите аудиофайл лекции (.MP3 или .WAV).</span></div>
+            
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <textarea class="text-area-output" id="output-textarea" readonly placeholder="Текст лекции начнет появляться здесь построчно..."></textarea>
         </div>
     </div>
 
     <script>
-        const time = Date.now() / 1000;
-        document.documentElement.style.setProperty('--glow-delay-1', `-${time % 12}s`);
-        document.documentElement.style.setProperty('--glow-delay-2', `-${time % 15}s`);
-    </script>
-</body>
-</html>
+        const processFileBtn = document.getElementById('process-file-btn');
+        const copyBtn = document.getElementById('copy-text-btn');
+        const outputText = document.getElementById('output-textarea');
+        const statusText = document.getElementById('status-text');
+        const statusRow = document.getElementById('status-row');
+        const audioUpload = document.getElementById('audio-upload');
+        const audioEngine = document.getElementById('internal-audio-engine');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+
+        let recognition = null;
+        let isProcessing = false;
+
+        function startSpeechEngine() {
+            if (recognition) return true;
+
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'ru-RU';
+
+                recognition.onstart = () => {
+                    statusRow.className = 'status-badge processing';
+                    progressContainer.classList.add('visible');
+                };
+
+                recognition.onerror = (e) => {
+                    if (e.error === 'not-allowed') {
+                        statusText.innerText = 'Разрешите доступ к звуку/микрофону в настройках браузера (значок замка слева от URL)!';
+                    }
+                };
+
+                recognition.onend = () => {
+                    if (isProcessing) {
+                        try { recognition.start(); } catch(err) {}
+                    } else {
+                        stopProcessing();
+                    }
+                };
+
+                recognition.onresult = (event) => {
+                    let currentResult = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
