@@ -8,10 +8,14 @@
     <style>
         :root {
             --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --bg-card-hover: rgba(38, 38, 42, 0.75); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
-            --theme-color: #5cdb7d; --theme-glow: rgba(92, 219, 125, 0.3);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; width: 100vw; }
+
+        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(92,219,125,0.08) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; pointer-events: none; }
+        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(0,122,255,0.04) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; pointer-events: none; }
+        @keyframes floatGlow1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.15); } }
+        @keyframes floatGlow2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, -50px) scale(1.1); } }
 
         .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); height: 100vh; }
         .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
@@ -24,12 +28,8 @@
         .subtitle { color: var(--text-muted); font-size: 14px; }
         
         .sub-navigation { display: flex; gap: 10px; margin-bottom: 25px; background-color: var(--bg-sidebar); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; }
-        .sub-tab-link { flex-grow: 1; text-align: center; padding: 12px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-muted); transition: all 0.2s ease; }
-        
-        /* Кнопка "Лабораторные" горит ЗЕЛЕНЫМ */
-        .sub-tab-link.active { background-color: var(--theme-color); color: #0a0a0c; box-shadow: 0 0 15px var(--theme-glow); }
-        .sub-tab-link.lec-btn:hover { color: #7096ff; }
-        .sub-tab-link.prac-btn:hover { color: #ffa043; }
+        .sub-tab-link { flex-grow: 1; text-align: center; padding: 12px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-muted); }
+        .sub-tab-link.active { background-color: rgba(255, 255, 255, 0.08); color: #fff; }
         
         .scroll-container { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-bottom: 40px; }
         .scroll-container::-webkit-scrollbar { width: 6px; }
@@ -38,27 +38,24 @@
         .card { display: flex; background-color: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; flex-direction: column; gap: 10px; position: relative; }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
-        /* НАЗВАНИЕ ПРЕДМЕТА ЧИСТО БЕЛОЕ */
         .subject-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: #ffffff; }
-        /* ТЕКСТ НА ПЛАШКЕ ТЕПЕРЬ СТРОГО: ЛАБОРАТОРНАЯ */
         .tag { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; background-color: rgba(92, 219, 125, 0.15); color: #5cdb7d; }
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
-        /* ИСПРАВЛЕНО НА 1 СЕМЕСТР */
         .semester-info { font-size: 13px; color: var(--text-muted); }
-        /* КНОПКА СТАЛА СЕРОЙ */
-        .action-link { font-size: 13px; color: var(--text-muted); font-weight: 600; cursor: pointer; text-decoration: none; transition: color 0.2s; }
-        .action-link:hover { color: #fff; text-decoration: underline; }
+        .action-link { font-size: 13px; color: #7e7e86; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .action-link:hover { text-decoration: underline; color: #fff; }
 
-        .labs-dropdown { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .labs-dropdown { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; }
         .labs-dropdown.open { max-height: 300px; margin-top: 15px; padding-top: 5px; }
         
-        .lab-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 13.5px; transition: all 0.2s; }
-        .lab-item:hover { background: rgba(92, 219, 125, 0.1); border-color: rgba(92, 219, 125, 0.3); color: #fff; padding-left: 18px; }
+        .lab-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 8px; color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 13.5px; transition: all 0.2s; }
+        .lab-item:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); color: #fff; padding-left: 18px; }
         .lab-item span { font-size: 12px; color: var(--text-muted); }
     </style>
 </head>
 <body>
+    <div class="bg-glow-1"></div><div class="bg-glow-2"></div>
     <div class="sidebar">
         <a href="index.html" class="sidebar-btn logo">📚</a>
         <a href="notes.html" class="sidebar-btn active">
@@ -71,8 +68,8 @@
     <div class="main-content">
         <div class="header-area"><h1><a href="notes.html" style="text-decoration: none; color: inherit;">Архив конспектов</a></h1><div class="subtitle">1 курс • 1 семестр • Лабораторные работы</div></div>
         <div class="sub-navigation">
-            <a href="notes-lectures.html" class="sub-tab-link lec-btn">Лекции</a>
-            <a href="notes-practices.html" class="sub-tab-link prac-btn">Практика</a>
+            <a href="notes-lectures.html" class="sub-tab-link">Лекции</a>
+            <a href="notes-practices.html" class="sub-tab-link">Практика</a>
             <div class="sub-tab-link active">Лабораторные</div>
         </div>
         
