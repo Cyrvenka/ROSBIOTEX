@@ -1,3 +1,4 @@
+<!-- Имя файла: notes-lectures.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,8 +13,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; width: 100vw; }
 
-        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(0,122,255,0.18) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; animation-delay: var(--glow-delay-1, 0s); pointer-events: none; }
-        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(92,219,125,0.1) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; animation-delay: var(--glow-delay-2, 0s); pointer-events: none; }
+        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(0,122,255,0.18) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; pointer-events: none; }
+        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(92,219,125,0.1) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; pointer-events: none; }
         @keyframes floatGlow1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.15); } }
         @keyframes floatGlow2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, -50px) scale(1.1); } }
 
@@ -43,9 +44,6 @@
         
         .card { display: flex; background-color: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .card:hover { background-color: var(--bg-card-hover); transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); }
-        .card.empty { cursor: default; opacity: 0.35; background: linear-gradient(90deg, rgba(26, 26, 26, 0.45) 25%, rgba(40, 40, 45, 0.55) 50%, rgba(26, 26, 26, 0.45) 75%); background-size: 200% 100%; animation: shimmer 3s infinite linear; }
-        .card.empty:hover { transform: none; box-shadow: none; border-color: var(--border-color); background-color: var(--bg-card); }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
         .subject-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -76,28 +74,10 @@
             <a href="notes-labs.html" class="sub-tab-link tab-lab-btn">Лабораторные</a>
         </div>
         <div class="scroll-container">
-            <div class="card empty"><div class="card-header"><div class="subject-title">Неорганическая химия</div><span class="tag lecture">Лекция</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Материалы скоро появятся</span></div></div>
-            <a href="lecture-pravo.html" class="card"><div class="card-header"><div class="subject-title">Правоведение</div><span class="tag lecture">Лекция</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
-            <div class="card empty"><div class="card-header"><div class="subject-title">Основы российской государственности</div><span class="tag lecture">Лекция</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Материалы скоро появятся</span></div></div>
-            <div class="card empty"><div class="card-header"><div class="subject-title">История России</div><span class="tag lecture">Лекция</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Материалы скоро появятся</span></div></div>
-            <div class="card empty"><div class="card-header"><div class="subject-title">Введение в специальность</div><span class="tag lecture">Лекция</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Материалы скоро появятся</span></div></div>
-        </div>
-    </div>
-
-    <script>
-        const time = Date.now() / 1000;
-        document.documentElement.style.setProperty('--glow-delay-1', `-${time % 12}s`);
-        document.documentElement.style.setProperty('--glow-delay-2', `-${time % 15}s`);
-
-        let lastAction = 0;
-        window.addEventListener('wheel', e => {
-            if (Date.now() - lastAction < 800) return;
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 30) {
-                if (e.deltaX > 0) { lastAction = Date.now(); window.location.href = 'notes-practices.html'; }
-            } else if (e.shiftKey && Math.abs(e.deltaY) > 30) {
-                if (e.deltaY > 0) { lastAction = Date.now(); window.location.href = 'notes-practices.html'; }
-            }
-        }, { passive: true });
-    </script>
-</body>
-</html>
+            <!-- АКТИВИРОВАННЫЕ КАРТОЧКИ С ПЕРЕХОДАМИ -->
+            <a href="lecture-history-1.html" class="card"><div class="card-header"><div class="subject-title">История России • Лекция 1<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Историография и периодизация науки</span></div><span class="tag lecture">История</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
+            <a href="lecture-history-2.html" class="card"><div class="card-header"><div class="subject-title">История России • Лекция 2<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Становление и внешняя политика Древнерусского государства</span></div><span class="tag lecture">История</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
+            <a href="lecture-history-3.html" class="card"><div class="card-header"><div class="subject-title">История России • Лекция 3<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Борьба с угрозами и возвышение Москвы</span></div><span class="tag lecture">История</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
+            <a href="lecture-chemistry-1.html" class="card"><div class="card-header"><div class="subject-title">Неорганическая химия • Лекция 1<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Введение в химию. Строение атома</span></div><span class="tag lecture">Химия</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
+            <a href="lecture-chemistry-2.html" class="card"><div class="card-header"><div class="subject-title">Неорганическая химия • Лекция 2<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Квантово-механическая модель. Квантовые числа</span></div><span class="tag lecture">Химия</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
+            <a href="lecture-math-1.html" class="card"><div class="card-header"><div class="subject-title">Высшая математика • Лекция 1<br><span style="font-size:13px; color:var(--text-muted); font-weight:400;">Линейная алгебра. Матрицы и преобразования</span></div><span class="tag lecture">Вышмат</span></div><div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-text">Открыть материалы →</span></div></a>
