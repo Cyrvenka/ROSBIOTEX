@@ -1,0 +1,116 @@
+<!-- Имя файла: lecture-history.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конспекты по Истории — Лекции 1-2</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --accent-red: #ff4545; --accent-neon: #ff9f43; --history-bg: rgba(255, 69, 69, 0.03); --history-border: rgba(255, 69, 69, 0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
+        
+        .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,69,69,0.08) 0%, rgba(0,0,0,0) 70%); top: -200px; left: 20%; z-index: 1; pointer-events: none; }
+
+        .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); height: 100vh; }
+        .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
+        .sidebar-btn.logo { background: linear-gradient(135deg, #ff4545, #ff9f43); color: #fff; font-size: 20px; box-shadow: 0 4px 15px rgba(255,69,69,0.3); }
+        .sidebar-btn:hover, .sidebar-btn.active { color: var(--text-main); background-color: rgba(255,255,255,0.06); }
+
+        .layout-wrapper { flex-grow: 1; display: flex; position: relative; z-index: 10; height: 100vh; overflow: hidden; }
+        
+        .lecture-nav { width: 260px; border-right: 1px solid var(--border-color); padding: 40px 20px; display: flex; flex-direction: column; gap: 25px; flex-shrink: 0; background: rgba(11, 11, 13, 0.5); backdrop-filter: blur(10px); }
+        .nav-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .nav-links { display: flex; flex-direction: column; gap: 8px; list-style: none; overflow-y: auto; }
+        .nav-item a { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.2s; line-height: 1.4; }
+        .nav-item a:hover { color: var(--text-main); background: rgba(255,255,255,0.04); }
+        .nav-item.active a { color: #fff; background: rgba(255, 69, 69, 0.15); border: 1px solid rgba(255, 69, 69, 0.25); }
+
+        .content-area { flex-grow: 1; padding: 40px 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 35px; }
+        .content-area::-webkit-scrollbar { width: 6px; }
+        .content-area::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        .breadcrumbs { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .breadcrumbs a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumbs a:hover { color: var(--accent-red); }
+
+        .lecture-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.3; }
+        .lecture-header .meta { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+        .lecture-section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 40px; }
+        .lecture-section h2 { font-size: 20px; font-weight: 700; border-left: 3px solid var(--accent-red); padding-left: 12px; margin-bottom: 4px; margin-top: 10px; color: #fff; }
+        .lecture-section p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.7; text-align: justify; }
+        
+        .term { font-weight: 600; color: var(--accent-neon); background: rgba(255,159,67,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,159,67,0.15); }
+        
+        .history-box { background: var(--history-bg); border-left: 3px solid var(--accent-red); border-top: 1px solid var(--history-border); border-right: 1px solid var(--history-border); border-bottom: 1px solid var(--history-border); border-radius: 0 12px 12px 0; padding: 20px; margin: 10px 0; }
+        .history-box h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--accent-neon); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .history-box p { font-size: 14px; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.6; }
+
+        .page-navigation { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 20px; margin-bottom: 40px; }
+        .nav-page-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 10px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .nav-page-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="sidebar">
+        <a href="index.html" class="sidebar-btn logo">📚</a>
+        <a href="notes.html" class="sidebar-btn active">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </a>
+        <a href="tools.html" class="sidebar-btn" title="Инструменты">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </a>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="lecture-nav">
+            <span class="nav-title">Содержание</span>
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="#hist1-1">Л1: Особенности истории России</a></li>
+                <li class="nav-item"><a href="#hist1-2">Л1: Факторы развития</a></li>
+                <li class="nav-item"><a href="#hist2-1">Л2: Русь в средние века</a></li>
+                <li class="nav-item"><a href="#hist2-2">Л2: Феодальная раздробленность</a></li>
+            </ul>
+        </div>
+
+        <div class="content-area">
+            <div class="breadcrumbs">
+                <a href="notes.html">Архив</a> &gt; Лекции &gt; История России
+            </div>
+
+            <div class="lecture-header">
+                <h1>Конспекты лекций по Истории России</h1>
+                <div class="meta">Семестр 1 • Базовый курс • Лекции 1-2</div>
+            </div>
+
+            <!-- ЛЕКЦИЯ 1 РАЗДЕЛ 1 -->
+            <div class="lecture-section" id="hist1-1">
+                <h2>Лекция 1. Место истории России в мировом историческом процессе</h2>
+                <p>История России представляет собой неотъемлемую часть всемирной истории, обладающую при этом выраженной спецификой. Географическое положение между Востоком и Западом определило <span class="term">евразийский характер</span> развития цивилизации, сочетающий в себе элементы как европейской культуры и правовых институтов, так и восточных традиций централизованного государственного управления.</p>
+                
+                <div class="history-box">
+                    <h4>Историческая концепция</h4>
+                    <p>Многофакторный подход к анализу прошлого позволяет рассматривать эволюцию государственности не изолированно, а во взаимосвязи с глобальными миграционными, климатическими и экономическими процессами.</p>
+                </div>
+            </div>
+
+            <!-- ЛЕКЦИЯ 1 РАЗДЕЛ 2 -->
+            <div class="lecture-section" id="hist1-2">
+                <h2>Ключевые факторы развития российской государственности</h2>
+                <p>Среди основных детерминант исторического пути выделяют природно-климатический и геополитический факторы. Огромные пространства с суровым климатом требовали высокой степени мобилизации ресурсов и консолидации общества вокруг сильной центральной власти. Постоянная необходимость защиты протяженных сухопутных границ от внешних экспансий сформировала служилый характер государства и укрепила общинные институты взаимопомощи.</p>
+            </div>
+
+            <!-- ЛЕКЦИЯ 2 РАЗДЕЛ 1 -->
+            <div class="lecture-section" id="hist2-1">
+                <h2>Лекция 2. Древнерусское государство и средневековая Русь</h2>
+                <p>Становление государственности связано с формированием Древнерусского государства с центром в Киеве. Политическая система раннего средневековья основывалась на сочетании княжеской власти, дружинной знати и народно-вечевых традиций городов. Принятие христианства по византийскому образцу определило цивилизационный выбор, укрепило международный авторитет страны и заложило основы единого социокультурного пространства.</p>
+            </div>
+
+            <!-- ЛЕКЦИЯ 2 РАЗДЕЛ 2 -->
+            <div class="lecture-section" id="hist2-2">
+                <h2>Причины и последствия феодальной раздробленности</h2>
