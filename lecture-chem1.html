@@ -1,0 +1,124 @@
+<!-- Имя файла: lecture-chem1.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лекции 1-2 — Неорганическая химия</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --accent-green: #5cdb7d; --accent-neon: #a1ffb8; --chem-bg: rgba(92, 219, 125, 0.03); --chem-border: rgba(92, 219, 125, 0.25);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
+        
+        .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(92,219,125,0.06) 0%, rgba(0,0,0,0) 70%); top: -200px; left: 20%; z-index: 1; pointer-events: none; }
+
+        .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); height: 100vh; }
+        .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
+        .sidebar-btn.logo { background: linear-gradient(135deg, #5cdb7d, #a1ffb8); color: #fff; font-size: 20px; box-shadow: 0 4px 15px rgba(92,219,125,0.3); }
+        .sidebar-btn:hover, .sidebar-btn.active { color: var(--text-main); background-color: rgba(255,255,255,0.06); }
+
+        .layout-wrapper { flex-grow: 1; display: flex; position: relative; z-index: 10; height: 100vh; overflow: hidden; }
+        
+        .lecture-nav { width: 240px; border-right: 1px solid var(--border-color); padding: 40px 20px; display: flex; flex-direction: column; gap: 25px; flex-shrink: 0; background: rgba(11, 11, 13, 0.5); backdrop-filter: blur(10px); }
+        .nav-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .nav-links { display: flex; flex-direction: column; gap: 8px; list-style: none; }
+        .nav-item a { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.2s; }
+        .nav-item a:hover { color: var(--text-main); background: rgba(255,255,255,0.04); }
+        .nav-item.active a { color: #fff; background: rgba(92, 219, 125, 0.15); border: 1px solid rgba(92, 219, 125, 0.25); }
+
+        .content-area { flex-grow: 1; padding: 40px 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; }
+        .content-area::-webkit-scrollbar { width: 6px; }
+        .content-area::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        .breadcrumbs { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .breadcrumbs a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumbs a:hover { color: var(--accent-green); }
+
+        .lecture-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.3; }
+        .lecture-header .meta { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+        .lecture-section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 40px; }
+        .lecture-section h2 { font-size: 20px; font-weight: 700; border-left: 3px solid var(--accent-green); padding-left: 12px; margin-bottom: 4px; margin-top: 10px; }
+        .lecture-section p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.7; text-align: justify; }
+        
+        .term { font-weight: 600; color: var(--accent-neon); background: rgba(92,219,125,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(92,219,125,0.15); }
+        
+        .chem-formula { font-family: "Courier New", monospace; font-size: 18px; color: #fff; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 8px; border: 1px dashed var(--border-color); display: inline-block; margin: 5px 0; }
+
+        .chem-box { background: var(--chem-bg); border-left: 3px solid var(--accent-green); border-top: 1px solid var(--chem-border); border-right: 1px solid var(--chem-border); border-bottom: 1px solid var(--chem-border); border-radius: 0 12px 12px 0; padding: 20px; margin: 10px 0; }
+        .chem-box h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--accent-neon); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .chem-box p { font-size: 14px; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.6; }
+
+        .page-navigation { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 20px; margin-bottom: 40px; }
+        .nav-page-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 10px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .nav-page-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="sidebar">
+        <a href="index.html" class="sidebar-btn logo">📚</a>
+        <a href="notes.html" class="sidebar-btn active">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </a>
+        <a href="tools.html" class="sidebar-btn" title="Инструменты">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </a>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="lecture-nav">
+            <span class="nav-title">Содержание</span>
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="#sec1">1. Строение атома</a></li>
+                <li class="nav-item"><a href="#sec2">2. Квантовые числа</a></li>
+                <li class="nav-item"><a href="#sec3">3. Постулаты Бора</a></li>
+            </ul>
+        </div>
+
+        <div class="content-area">
+            <div class="breadcrumbs">
+                <a href="notes.html">Архив</a> &gt; <a href="notes-lectures.html">Лекции</a> &gt; Неорганическая химия
+            </div>
+
+            <div class="lecture-header">
+                <h1>Лекция 1-2. Строение атома, квантовые числа и квантовая модель</h1>
+                <div class="meta">Предмет: Неорганическая химия • Модуль 1</div>
+            </div>
+
+            <!-- РАЗДЕЛ 1 -->
+            <div class="lecture-section" id="sec1">
+                <h2>1. Строение атома и элементарные частицы</h2>
+                <p>Современная химия опирается на квантово-механические представления о строении вещества. <span class="term">Атом</span> — это электронейтральная частица, состоящая из положительно заряженного атомного ядра и отрицательно заряженной электронной оболочки.</p>
+                <p>Ядро атома сосредоточивает в себе практически всю его массу и состоит из нуклонов — положительно заряженных протонов и нейтральных нейтронов. Масса электрона ничтожно мала по сравнению с массой нуклонов.</p>
+                
+                <div class="chem-box">
+                    <h4>Важное правило стабильности</h4>
+                    <p>Количество протонов в ядре строго определяет порядковый номер элемента в Периодической системе Менделеева и заряд самого ядра.</p>
+                </div>
+            </div>
+
+            <!-- РАЗДЕЛ 2 -->
+            <div class="lecture-section" id="sec2">
+                <h2>2. Квантовые числа электронов</h2>
+                <p>Состояние электрона в атоме описывается с помощью четырёх квантовых чисел. <span class="term">Главное квантовое число (n)</span> характеризует общую энергию электрона и размер электронного облака (принимает целые значения от 1 до бесконечности).</p>
+                <p>Орбитальное квантовое число определяет форму атомной орбитали (s, p, d, f). Магнитное квантовое число задает пространственную ориентацию орбитали, а спиновое — собственный момент импульса электрона.</p>
+                
+                <div style="text-align: center;">
+                    <div class="chem-formula">
+                        N = 2n² (Максимальное число электронов на уровне)
+                    </div>
+                </div>
+            </div>
+
+            <!-- РАЗДЕЛ 3 -->
+            <div class="lecture-section" id="sec3">
+                <h2>3. Постулаты Нильса Бора</h2>
+                <p>Переход от классической физики к квантовой начался с теории Нильса Бора. Его концепция базируется на утверждении, что электроны могут вращаться вокруг ядра только по строго определенным <span class="term">стационарным орбитам</span>, находясь на которых они не излучают и не поглощают энергию.</p>
+                <p>Излучение или поглощение кванта энергии (фотона) происходит только при переходе электрона с одной орбиты на другую.</p>
+            </div>
+
+            <div class="page-navigation">
