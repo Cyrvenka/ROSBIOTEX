@@ -8,7 +8,7 @@
     <style>
         :root {
             --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
-            --color-lecture: #007aff; --text-lecture: #7096ff;
+            --color-lecture: #24335c; --text-lecture: #7096ff;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
@@ -29,19 +29,10 @@
         h1 a { text-decoration: none; color: inherit; }
         .subtitle { color: var(--text-muted); font-size: 14px; }
 
-        .tools-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 20px; }
-        .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
-        .buttons-group { display: flex; align-items: center; gap: 12px; }
-
-        .gate-link { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,122,255,0.2); text-decoration: none; }
-        .gate-link:hover { background: #0063d1; transform: translateY(-1px); }
-        .gate-link.secondary { background: rgba(255,255,255,0.06); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none; }
-        .gate-link.secondary:hover { background: rgba(255,255,255,0.12); }
-        .gate-link.green { background: #5cdb7d; color: #0a0a0c; font-weight: 700; box-shadow: 0 4px 12px rgba(92,219,125,0.2); }
-        .gate-link.green:hover { background: #4ec26e; }
-
-        .text-area-output { width: 100%; height: 340px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.6; resize: none; outline: none; }
-        .text-area-output:focus { border-color: rgba(0,122,255,0.3); }
+        .tools-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; height: calc(100vh - 160px); overflow: hidden; }
+        
+        /* ОБЛАЧНЫЙ ИИ-ИНТЕРФЕЙС БЕЗ НАГРУЗКИ НА ПК */
+        iframe { width: 100%; height: 100%; border: none; border-radius: 12px; background: #0b0b0f; }
     </style>
 </head>
 <body>
@@ -56,65 +47,18 @@
         </a>
     </div>
     <div class="main-content">
-        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Быстрая ИИ-обработка длинных аудиозаписей лекций</div></div>
+        <div class="header-area"><h1><a href="notes.html">Встроенные инструменты</a></h1><div class="subtitle">Автономное ИИ-распознавание аудиофайлов лекций в текст (Облачный Whisper)</div></div>
         
         <div class="tools-container">
-            <div class="controls-row">
-                <div class="buttons-group">
-                    <a href="https://huggingface.co" target="_blank" class="gate-link">
-                        🚀 Открыть ИИ-декодер Whisper
-                    </a>
-                    <a href="https://t.me" target="_blank" class="gate-link secondary">
-                        🤖 Бот Сбера в Telegram
-                    </a>
-                    <button class="gate-link green" id="format-btn">🪄 Сделать конспект</button>
-                </div>
-                <button class="gate-link secondary" id="copy-btn">Скопировать результат</button>
-            </div>
-
-            <textarea class="text-area-output" id="input-textarea" placeholder="Инструкция для быстрого разбора:&#10;1. Нажмите первую синюю кнопку — в новой вкладке откроется официальный сверхскоростной ИИ-сервер Whisper.&#10;2. Просто перетащите туда ваш часовой MP3-файл. Через 40 секунд он выдаст полный текст.&#10;3. Скопируйте полученный текст, вернитесь на наш сайт и вставьте его сюда.&#10;4. Нажмите зеленую кнопку 'Сделать конспект' — наш скрипт уберет мусор и разобьет текст на абзацы!"></textarea>
+            <!-- Стабильный облачный ИИ-движок без блокировок и без связи с ПК -->
+            <iframe src="https://hf.space" allow="microphone"></iframe>
         </div>
     </div>
 
     <script>
-        const formatBtn = document.getElementById('format-btn');
-        const copyBtn = document.getElementById('copy-btn');
-        const textarea = document.getElementById('input-textarea');
-
-        // УМНЫЙ АВТО-РЕРАЙТЕР И ФОРМАТИРОВЩИК ТЕКСТА
-        formatBtn.addEventListener('click', () => {
-            let text = textarea.value.trim();
-            if (!text || text.startsWith("Инструкция:")) return;
-
-            // 1. Убираем слова-паразиты и мусор, который часто генерируют ИИ при расшифровке
-            const мусор = [
-                /\bтак сказать\b/gi, /\bкороче\b/gi, /\bну типа\b/gi, /\bтипа того\b/gi, 
-                /\bв принципе\b/gi, /\bкак бы\b/gi, /\bзначит\b/gi, /\bвот\b/gi
-            ];
-            мусор.forEach(regex => text = text.replace(regex, ''));
-
-            // 2. Делаем умную разбивку длинного сплошного текста на абзацы (каждые 3-4 предложения)
-            let sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g);
-            if (sentences) {
-                let formattedText = "";
-                for (let i = 0; i < sentences.length; i++) {
-                    formattedText += sentences[i];
-                    if ((i + 1) % 3 === 0) {
-                        formattedText += "\n\n"; // Добавляем красивый абзац
-                    }
-                }
-                text = formattedText;
-            }
-
-            textarea.value = "📝 АВТОМАТИЧЕСКИЙ КОНСПЕКТ ЛЕКЦИИ:\n\n" + text;
-        });
-
-        copyBtn.addEventListener('click', () => {
-            if (!textarea.value.trim() || textarea.value.startsWith("Инструкция:")) return;
-            navigator.clipboard.writeText(textarea.value);
-            const orig = copyBtn.innerText; copyBtn.innerText = 'Скопировано!';
-            setTimeout(() => copyBtn.innerText = orig, 1500);
-        });
+        const time = Date.now() / 1000;
+        document.documentElement.style.setProperty('--glow-delay-1', `-${time % 12}s`);
+        document.documentElement.style.setProperty('--glow-delay-2', `-${time % 15}s`);
     </script>
 </body>
 </html>
