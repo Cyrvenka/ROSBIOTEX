@@ -6,86 +6,72 @@
     <title>Архив конспектов</title>
     <style>
         :root {
-            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
-            --color-lecture: #24335c; --text-lecture: #7096ff; --color-practice: #472d16; --text-practice: #ffa043; --color-lab: #1b3824; --text-lab: #5cdb7d;
+            --bg-main: #0a0a0c;
+            --bg-sidebar: #111113;
+            --bg-card: rgba(26, 26, 26, 0.45);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #7e7e86;
+            --color-lecture: #7096ff;
+            --color-practice: #ff9f70;
+            --color-lab: #70ff9a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; width: 100vw; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Узкая левая панель со значками */
+        .icon-bar { width: 50px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; height: 100vh; position: fixed; top: 0; bottom: 0; left: 0; z-index: 110; }
+        .icon-box { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.2s; font-size: 16px; border: 1px solid transparent; }
+        .icon-box:hover { color: #fff; background-color: rgba(255,255,255,0.03); }
+        .icon-box.active-folder { background-color: #24335c; color: #7096ff; }
+        .icon-box.active-db { border-color: var(--border-color); color: #fff; }
 
-        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(0,122,255,0.12) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none; }
-        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; pointer-events: none; }
+        .main-container { margin-left: 50px; flex-grow: 1; padding: 60px 80px; max-width: 1000px; }
+        h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; }
+        .sub-title { color: var(--text-muted); font-size: 14px; margin-bottom: 35px; }
+        
+        .nav-tabs { background-color: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .nav-link { font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
+        .nav-link:hover { opacity: 0.8; }
+        .nav-link.lec { color: var(--color-lecture); }
+        .nav-link.prac { color: var(--color-practice); }
+        .nav-link.lab { color: var(--color-lab); }
 
-        .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); height: 100vh; }
-        .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
-        .sidebar-btn.logo { background: linear-gradient(135deg, #007aff, #00f0ff); color: #fff; font-size: 20px; box-shadow: 0 4px 15px rgba(0,122,255,0.3); }
-        .sidebar-btn:hover, .sidebar-btn.active { color: var(--text-main); background-color: rgba(255,255,255,0.06); }
-
-        .main-content { flex-grow: 1; padding: 40px; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; position: relative; z-index: 10; height: 100vh; }
-        .header-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
-        h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-        .subtitle { color: var(--text-muted); font-size: 14px; }
+        .info-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px 30px; margin-bottom: 25px; }
+        .card-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .info-card p { color: rgba(255, 255, 255, 0.7); font-size: 14px; line-height: 1.6; }
         
-        .sub-navigation { display: flex; gap: 10px; margin-bottom: 25px; background-color: var(--bg-sidebar); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; }
-        .sub-tab-link { flex-grow: 1; text-align: center; padding: 12px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .sub-tab-link.tab-lectures { color: var(--text-lecture); }
-        .sub-tab-link.tab-practices { color: var(--text-practice); }
-        .sub-tab-link.tab-labs { color: var(--text-lab); }
-        .sub-tab-link:hover { background-color: rgba(255, 255, 255, 0.04); }
-        
-        .scroll-container { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
-        .scroll-container::-webkit-scrollbar { width: 6px; }
-        .scroll-container::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
-        
-        .card { display: flex; background-color: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; flex-direction: column; gap: 12px; }
-        .card-title-area { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; color: #fff; }
-        .card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
-        
-        .alert-box { border-left: 3px solid #ff453a; background: rgba(255, 69, 58, 0.06); border-top: 1px solid rgba(255,255,255,0.01); border-right: 1px solid rgba(255,255,255,0.01); border-bottom: 1px solid rgba(255,255,255,0.01); border-radius: 0 10px 10px 0; padding: 16px; margin: 5px 0; }
-        .alert-title { font-size: 13px; font-weight: 800; text-transform: uppercase; color: #ff453a; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .alert-box p { color: rgba(255,255,255,0.9); font-weight: 700; font-size: 13.5px; }
-        
-        .list-bullet { display: flex; flex-direction: column; gap: 10px; list-style: none; padding-left: 5px; }
-        .list-bullet li { position: relative; padding-left: 20px; color: var(--text-muted); font-size: 13.5px; line-height: 1.6; }
-        .list-bullet li::before { content: "•"; color: #ff453a; font-weight: bold; position: absolute; left: 0; }
+        .alert-box { background-color: rgba(235, 87, 87, 0.06); border: 1px solid rgba(235, 87, 87, 0.2); border-radius: 6px; padding: 15px 20px; margin: 15px 0; }
+        .alert-box strong { color: #eb5757; font-size: 13px; font-weight: 800; display: block; margin-bottom: 5px; letter-spacing: 0.3px; }
+        .alert-box p { color: rgba(255, 255, 255, 0.6); font-size: 13px; line-height: 1.5; }
     </style>
 </head>
 <body>
-    <div class="bg-glow-1"></div><div class="bg-glow-2"></div>
-    <div class="sidebar">
-        <a href="index.html" class="sidebar-btn logo">📚</a>
-        <a href="notes.html" class="sidebar-btn active">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-        </a>
-        <a href="tools.html" class="sidebar-btn" title="Инструменты">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-        </a>
+    <!-- ИСПРАВЛЕНО: ЗНАЧОК МИКРОФОНА ПОЛНОСТЬЮ УБРАН ИЗ ПАНЕЛИ -->
+    <div class="icon-bar">
+        <a href="index.html" class="icon-box active-folder">📁</a>
+        <a href="notes.html" class="icon-box active-db">🗄️</a>
     </div>
-    <div class="main-content">
-        <div class="header-area">
-            <h1>Архив конспектов</h1>
-            <div class="subtitle">Выбери необходимую категорию материалов</div>
-        </div>
-        <div class="sub-navigation">
-            <a href="notes-lectures.html" class="sub-tab-link tab-lectures">Лекции</a>
-            <a href="notes-practices.html" class="sub-tab-link tab-practices">Практика</a>
-            <a href="notes-labs.html" class="sub-tab-link tab-labs">Лабораторные</a>
-        </div>
-        
-        <div class="scroll-container">
-            <div class="card">
-                <div class="card-title-area">📁 Разделы базы знаний</div>
-                <!-- ТУТ ИЗМЕНЕН ОРИГИНАЛЬНЫЙ ТЕКСТ -->
-                <p>Добро пожаловать в учебный архив. Чтобы открыть нужные учебные материалы, перейди в один из трех разделов выше.</p>
-            </div>
+    <div class="main-container">
+        <h1>Архив конспектов</h1>
+        <div class="sub-title">Выбери необходимую категорию материалов</div>
 
-            <div class="card">
-                <div class="card-title-area">📌 Информация для группы</div>
-                <div class="alert-box">
-                    <p>ВСЕ КОНСПЕКТЫ НАПИСАНЫ НЕЙРОНКОЙ И ПЕРЕПИСЫВАТЬ ТОЧЬ В ТОЧЬ - НЕЛЬЗЯ, ЧТОБЫ ИЗБЕЖАТЬ ПРОБЛЕМ!</p>
-                </div>
-                <ul class="list-bullet">
-                    <li>При переносе или переписи материалов обязательно загружайте исходный текст в нейросеть с запросом на изменение формулировок, рерайт или перефраз исходного содержимого.</li>
-                </ul>
+        <div class="nav-tabs">
+            <a href="notes-lectures.html" class="nav-link lec">Лекции</a>
+            <a href="notes-practices.html" class="nav-link prac">Практика</a>
+            <a href="notes-labs.html" class="nav-link lab">Лабораторные</a>
+        </div>
+
+        <div class="info-card">
+            <div class="card-title">📁 Разделы базы знаний</div>
+            <p>Добро пожаловать в учебный архив. Чтобы открыть нужные учебные материалы, перейди в один из трех разделов выше.</p>
+        </div>
+
+        <div class="info-card">
+            <div class="card-title">📌 Информация для группы</div>
+            <div class="alert-box">
+                <strong>ВСЕ КОНСПЕКТЫ НАПИСАНЫ НЕЙРОНКОЙ И ПЕРЕПИСЫВАТЬ ТОЧЬ В ТОЧЬ - НЕЛЬЗЯ, ЧТОБЫ ИЗБЕЖАТЬ ПРОБЛЕМ!</strong>
+                <p>При переносе или переписи материалов обязательно загружайте исходный текст в нейросеть с запросом на изменение формулировок, рерайт или парафраз исходного содержимого.</p>
             </div>
         </div>
     </div>
