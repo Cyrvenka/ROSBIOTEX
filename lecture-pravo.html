@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конспекты по Правоведению — Лекция 1</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; 
+            --bg-sidebar: #111113; 
+            --border-color: rgba(255, 255, 255, 0.08); 
+            --text-main: #ffffff; 
+            --text-muted: #7e7e86;
+            --color-lecture: #24335c; 
+            --text-lecture: #7096ff;
+        }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar { 
+            width: 260px; 
+            background-color: var(--bg-sidebar); 
+            border-right: 1px solid var(--border-color); 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+        .sidebar-title { 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-muted); 
+        }
+        .menu-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            list-style: none; 
+        }
+        .menu-link { 
+            display: block; 
+            padding: 12px 16px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            transition: all 0.2s; 
+        }
+        .menu-link:hover { 
+            color: #fff; 
+            background-color: rgba(255,255,255,0.03); 
+        }
+        .menu-link.active-blue { 
+            background-color: var(--color-lecture); 
+            color: var(--text-lecture); 
+        }
+
+        .main-content { 
+            margin-left: 260px;
+            padding: 50px 60px 100px 60px; 
+            max-width: 900px; 
+            width: calc(100% - 260px);
+            display: block;
+        }
+        .back-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 600; 
+            margin-bottom: 25px; 
+            transition: color 0.2s; 
+        }
+        .back-link:hover { 
+            color: #fff; 
+        }
+        .meta-info { 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 0.5px; 
+            margin-bottom: 10px; 
+        }
+        
+        h1 { 
+            font-size: 32px; 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            margin-bottom: 35px; 
+            line-height: 1.2; 
+        }
+        h2 { 
+            font-size: 20px; 
+            font-weight: 700; 
+            margin: 40px 0 20px 0; 
+            padding-left: 15px; 
+            border-left: 3px solid var(--text-lecture); 
+            line-height: 1.4; 
+        }
+        p { 
+            color: rgba(255,255,255,0.85); 
+            font-size: 15px; 
+            line-height: 1.7; 
+            margin-bottom: 20px; 
+        }
+        
+        .concept-box { 
+            background: rgba(36, 51, 92, 0.15); 
+            border-radius: 0 12px 12px 0; 
+            padding: 24px; 
+            margin: 30px 0; 
+            border: 1px solid var(--border-color); 
+            border-left: 3px solid var(--text-lecture); 
+        }
+        .concept-title { 
+            font-size: 12px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: var(--text-lecture); 
+            letter-spacing: 0.5px; 
+            margin-bottom: 15px; 
+        }
+
+        .list-unstyled { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            list-style: none; 
+        }
+        .list-unstyled li { 
+            position: relative; 
+            padding-left: 20px; 
+            color: rgba(255,255,255,0.85); 
+            font-size: 15px; 
+            line-height: 1.6; 
+        }
+        .list-unstyled li::before { 
+            content: "•"; 
+            color: var(--text-lecture); 
+            font-weight: bold; 
+            position: absolute; 
+            left: 0; 
+        }
+        .sub-list { 
+            margin-left: 20px; 
+            margin-top: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            list-style: none; 
+        }
+        .sub-list li { 
+            position: relative; 
+            padding-left: 15px; 
+            color: rgba(255,255,255,0.8); 
+        }
+        .sub-list li::before { 
+            content: "◦"; 
+            color: var(--text-muted); 
+            position: absolute; 
+            left: 0; 
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-title">Содержание</div>
+        <ul class="menu-list">
+            <li><a href="lecture-pravo1.html" class="menu-link active-blue">Л1: Теория государства и права</a></li>
+            <li><a href="lecture-pravo2.html" class="menu-link">Л2: Статус личности и органы власти</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <a href="notes-lectures.html" class="back-link">← Вернуться к лекциям</a>
+        <div class="meta-info">Правоведение • Лекция №1</div>
+        
+        <!-- ОФОРМЛЕНО СТРОГО ПО ЭТАЛОНУ ИСТОРИИ -->
+        <h1>Конспекты лекций по Правоведению</h1>
+        <h2>Лекция 1. Теория государства и права</h2>
+
+        <div class="concept-box">
+            <div class="concept-title">Основные понятия</div>
+            <p>• <strong>Государство</strong> — политическая система, которая управляет обществом.</p>
+            <p style="margin-bottom: 0;">• <strong>Общество</strong> — совокупность людей, проживающих на определенной территории.</p>
+        </div>
+
+        <p><strong>Признаки государства:</strong></p>
+        <ul class="list-unstyled">
+            <li><strong>1. Территория:</strong> суша, воздушное пространство до космоса, недра, прибрежные воды до 200 морских миль [2].</li>
+            <li><strong>2. Население:</strong> граждане, лица без гражданства, иностранные граждане [2].</li>
+            <li><strong>3. Публичная власть:</strong> власть, распространяющаяся на всех, с помощью которой государство управляет территориями и лицами [2].</li>
+            <li><strong>4. Символы государства:</strong> герб, флаг и т.п [2].</li>
+            <li><strong>5. Органы государственной власти:</strong> законодательная — парламент, судебная — суды, исполнительная — правительство; власть может быть и объединена [2].</li>
+        </ul>
+
+        <h2>2. Формы государства (форма правления)</h2>
+        <ul class="list-unstyled">
+            <li><strong>Монархия:</strong> власть возглавляет монарх, обычно передается по наследству, но бывает и выборная [2].</li>
+            <li><strong>Республика:</strong> глава государства (или заменяющий его орган) обычно избирается [2].</li>
+        </ul>
+
+        <div class="concept-box">
+            <div class="concept-title">Виды монархии</div>
+            <p>• <strong>Абсолютная:</strong> власть полностью сосредоточена в руках монарха [2].</p>
+            <p>• <strong>Дуалистическая:</strong> монарх формирует правительство, но существует отдельная законодательная власть, независимая от монарха [2].</p>
+            <p style="margin-bottom: 0;">• <strong>Конституционная:</strong> власть монарха ограничена и регулируется конституцией [2].</p>
+        </div>
+
+        <div class="concept-box">
+            <div class="concept-title">Виды республик</div>
+            <p>• <strong>Парламентская:</strong> правительство формируется парламентом [2].</p>
+            <p>• <strong>Президентская:</strong> правительство формирует президент (пример: США) [2].</p>
+            <p style="margin-bottom: 0;">• <strong>Смешанная:</strong> правительство формируется и парламентом, и президентом (пример: РФ) [2].</p>
+        </div>
+        <h2>3. Формы территориального устройства</h2>
+        <ul class="list-unstyled">
+            <li><strong>Унитарное государство:</strong> концентрация власти в центральных органах. Местным органам предоставлено право самоуправления.
+                <ul class="sub-list">
+                    <li><em>Разновидность:</em> унитарное государство с автономией (на определенных территориях проживают группы людей с особыми признаками).</li>
+                </ul>
+            </li>
+            <li><strong>Федерация:</strong> государство разделено на определенные части (субъекты), наделенные собственными полномочиями.</li>
+            <li><strong>Конфедерация:</strong> союз государств. Исторически неустойчивая модель (обычно объединяется в федерацию или распадается, пример: США изначально были конфедерацией). Часть полномочий передается органам конфедерации.</li>
+        </ul>
+
+        <h2>4. Политический режим</h2>
+        <p>Характеризует способ осуществления власти.</p>
+        <ul class="list-unstyled">
+            <li><strong>Авторитарный:</strong> наиболее древний режим, в котором власть сосредоточена в руках одного человека или группы лиц.</li>
+            <li><strong>Демократический:</strong> власть распределяется между различными группами лиц и институтами, формируемыми путем выборов.
+                <ul class="sub-list">
+                    <li><em>Непосредственная демократия:</em> в чистом виде сейчас практически не встречается.</li>
+                    <li><em>Представительная демократия:</em> граждане избирают своих представителей, которые действуют от их имени.</li>
+                </ul>
+            </li>
+            <li><strong>Тоталитарный:</strong> отличается максимальной степенью контроля государства над обществом, стремлением осуществлять полный контроль.</li>
+        </ul>
+
+        <h2>5. Теория права</h2>
+        <p><strong>Право</strong> — система общеобязательных норм и правил поведения, установленных государством.</p>
+        
+        <p><strong>Источники права:</strong></p>
+        <ul class="list-unstyled">
+            <li><strong>1. Правовой обычай:</strong> наиболее старый источник. Правила поведения, сформировавшиеся постепенно и признанные со временем государством. Почти не применяется, но в редких исключениях имеет место быть.</li>
+            <li><strong>2. Судебный прецедент:</strong> решение суда по конкретному делу, являющееся обязательным для рассмотрения другими судами аналогичных дел.</li>
+            <li><strong>3. Нормативно-правовой акт:</strong> закон, указ, конституция, приказ, распоряжение. Основной источник права в РФ.</li>
+            <li><strong>4. Религиозные нормы:</strong> нормы религии, обязательные для исполнения.</li>
+        </ul>
+
+        <h2>6. Мировые правовые семьи</h2>
+        <ul class="list-unstyled">
+            <li><strong>Романо-германская (континентальная) семья:</strong> основной источник права нормативный акт. Право кодифицировано (сведение правовых актов в сборники и кодексы). Делится на отрасли.</li>
+            <li><strong>Англосаксонская система (система общего права):</strong> право не кодифицировано, не делится на отрасли. Действуют все источники права. Судья вправе создавать правила при помощи прецедентов.</li>
+            <li><strong>Религиозные правовые семьи:</strong> основаны на нормах религии (например, Ватикан по нормам канонического права, ряд мусульманских стран).</li>
+            <li><strong>Смешанная правовая семья:</strong> сочетает в себе признаки различных правовых систем.</li>
+        </ul>
+    </div>
+</body>
+</html>

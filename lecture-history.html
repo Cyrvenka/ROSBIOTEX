@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конспекты по Истории — Лекция 1</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --color-lecture: #24335c; --text-lecture: #7096ff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 30px 20px; gap: 30px; flex-shrink: 0; height: 100vh; }
+        .sidebar-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .menu-list { display: flex; flex-direction: column; gap: 8px; list-style: none; }
+        .menu-link { display: block; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
+        .menu-link:hover { color: #fff; background-color: rgba(255,255,255,0.03); }
+        .menu-link.active { background-color: var(--color-lecture); color: var(--text-lecture); }
+
+        .main-content { flex-grow: 1; padding: 50px 60px; overflow-y: auto; height: 100vh; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 25px; transition: color 0.2s; }
+        .back-link:hover { color: #fff; }
+        .meta-info { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 10px; }
+        
+        h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 35px; line-height: 1.2; }
+        h2 { font-size: 20px; font-weight: 700; margin: 40px 0 20px 0; padding-left: 15px; border-left: 3px solid var(--text-lecture); line-height: 1.4; }
+        p { color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+        
+        .concept-box { background: rgba(36, 51, 92, 0.15); border-left: 3px solid var(--text-lecture); border-radius: 0 12px 12px 0; padding: 24px; margin: 30px 0; border-top: 1px solid rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .concept-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-lecture); letter-spacing: 0.5px; margin-bottom: 10px; }
+        .concept-box p { margin-bottom: 0; font-style: italic; color: rgba(255,255,255,0.75); }
+
+        .list-unstyled { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; list-style: none; }
+        .list-unstyled li { position: relative; padding-left: 20px; color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.6; }
+        .list-unstyled li::before { content: "•"; color: var(--text-lecture); font-weight: bold; position: absolute; left: 0; }
+        .sub-list { margin-left: 20px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; list-style: none; }
+        .sub-list li::before { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <span class="sidebar-title">Содержание</span>
+        <ul class="menu-list">
+            <li><a href="lecture-history.html" class="menu-link active">Л1: Особенности истории России</a></li>
+            <li><a href="lecture-history2.html" class="menu-link">Л2: Русь в средние века</a></li>
+            <li><a href="lecture-history3.html" class="menu-link">Л3: Возвышение Москвы</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <a href="notes-lectures.html" class="back-link">← Вернуться к лекциям</a>
+        <div class="meta-info">История России • Лекция №1</div>
+        <h1>Конспекты лекций по Истории России</h1>
+
+        <h2>Лекция 1. Место истории России в мировом историческом процессе</h2>
+        <p>История России представляет собой неотъемлемую часть всемирной истории, обладающую при этом выраженной спецификой. Географическое положение между Востоком и Западом определило евразийский характер развития цивилизации, сочетающий в себе элементы как европейской культуры и правовых институтов, так и восточных традиций централизованного государственного управления.</p>
+
+        <div class="concept-box">
+            <div class="concept-title">Историческая концепция</div>
+            <p>Многофакторный подход к анализу прошлого позволяет рассматривать структуру эволюцию государственности не изолированно, а во взаимосвязи с globalными миграционными, климатическими и экономическими процессами.</p>
+        </div>
+
+        <h2>Ключевые факторы развития российской государственности</h2>
+        <p>Среди основных детерминант исторического пути выделяют природно-климатический и геополитический факторы. Огромные пространства с суровым климатом требовали высокой степени мобилизации ресурсов и консолидации общества вокруг сильной центральной власти. Постоянная необходимость защиты протяженных сухопутных границ от внешних экспансий сформировала служилый характер государства и укрепила общинные институты взаимопомощи.</p>
+
+        <h2>1. Зарождение российской исторической науки (18 век)</h2>
+        <ul class="list-unstyled">
+            <li>Контекст создания: Именно в 18 веке официально создается российская историческая наука.</li>
+            <li>Теория Миллера: Немецкий ученый Герард Фридрих Миллер создал в своих работах теорию, согласно которой русское государство было создано скандинавами. По его версии, они практически с нуля создали государство Русь.</li>
+            <li>Why в это верили? В норманнскую версию верили потому, что не было документов, четко объясняющих, откуда взялся Рюрик и откуда пришло его племя.</li>
+            <li>Суть спора: Племя «Русь» — было совершенно непонятно, откуда оно взялось. Ломоносов считал, что утверждения Миллера о скандинавском происхождении — это чисто его домыслы.</li>
+            <li>Вклад М. В. Ломоносова: Ломоносов провел собственное исследование и опроверг теорию Миллера. Вступив в спор (это было в середине 18 века), Ломоносов в своих работах опроверг целый ряд версий, которые немцы считали верными.
+                <ul class="sub-list">
+                    <li>В летописных записях про варягов Ломоносов не находил ничего общего со скандинавами и утверждал, что варяги — это не скандинавы.</li>
+                    <li>Ломоносов выдвинул теорию, что Рюриковичи и варяги являются выходцами не с Северо-Балтийского моря (не скандинавы).</li>
+                    <li>Он предположил, что это были прусы или полабские (поморские) словене. Ломоносов допускал версию с прусами как основную, а вторую (поморскую) как возможную.</li>
+                </ul>
+            </li>
+            <li>Итог дискуссии спустя 200 лет: Позже были проведены новые исследования, и версия Ломоносова (в ее первоначальном виде) тоже была опровергнута. До настоящего времени вопрос по Рюриковичам остается дискуссионным. Прошло уже больше 200 лет, но опровергнуть абсолютно все версии тяжело, поэтому вопрос не решен до сих пор: кто-то в науке выступает за Миллера (норманисты), кто-то за Ломоносова (антинорманисты), а кто-то за другие версии.</li>
+        </ul>
+
+        <h2>2. Крупные историки 19 века</h2>
+        <ul class="list-unstyled">
+            <li>Н. М. Карамзин: Придерживался версии Миллера (норманнской). За это многие современники, включая А. С. Пушкина, его жестко критиковали. Главным недостатком произведения Карамзина многие ученые считали то, что он необъективно все оценил.</li>
+            <li>С. М. Соловьев: Известный российский историк (прим.: в записях «пичерский» — вероятно, задиктованная путаница с летописцем Нестором Печерским, автора Повести временных лет, на которую все ссылались). Соловьев не придерживался никакой радикальной версии (ни Миллера, ни Ломоносова), потому что считал, что нет 100-процентной информации и точных данных.</li>
+            <li>Н. Я. Данилевский: В середине 19 века этот социолог внес огромный вклад в развитие мировой науки и разработал цивилизационный подход к изучению истории.</li>
+        </ul>
+
+        <h2>3. Советская наука и современность</h2>
+        <ul class="list-unstyled">
+            <li>Ученые из совка (СССР): Историки Б. А. Рыбаков и Б. Д. Греков — два советских ученых, которые детально изучали этот период. Они доказали, что основы государства у славян появились сами, без варягов.</li>
+            <li>В. Р. Мединский: Современный медийный историк. Важное исправление факта: в отличие от западников, Мединский выступает против западничества и норманнской теории, защищая идею самостоятельного развития России.</li>
+        </ul>
+
+        <h2>4. Периодизация истории</h2>
+        <ul class="list-unstyled">
+            <li>Археологическая периодизация: Используется для разделения на периоды именно древней истории.</li>
+            <li>Критерий разделения: В основу положено то, какие орудия использовались в производстве и из какого материала они делались (камень, бронза, железо).</li>
+        </ul>
+    </div>
+</body>
+</html>
