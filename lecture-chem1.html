@@ -1,124 +1,350 @@
-<!-- Имя файла: lecture-chem1.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лекции 1-2 — Неорганическая химия</title>
+    <title>Конспекты по Химии — Лекция 1</title>
     <style>
         :root {
-            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
-            --accent-green: #5cdb7d; --accent-neon: #a1ffb8; --chem-bg: rgba(92, 219, 125, 0.03); --chem-border: rgba(92, 219, 125, 0.25);
+            --bg-main: #0a0a0c; 
+            --bg-sidebar: #111113; 
+            --border-color: rgba(255, 255, 255, 0.08); 
+            --text-main: #ffffff; 
+            --text-muted: #7e7e86;
+            --color-lecture: #24335c; 
+            --text-lecture: #7096ff;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
         
-        .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(92,219,125,0.06) 0%, rgba(0,0,0,0) 70%); top: -200px; left: 20%; z-index: 1; pointer-events: none; }
-
-        .sidebar { width: 70px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; position: relative; z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); height: 100vh; }
-        .sidebar-btn { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; }
-        .sidebar-btn.logo { background: linear-gradient(135deg, #5cdb7d, #a1ffb8); color: #fff; font-size: 20px; box-shadow: 0 4px 15px rgba(92,219,125,0.3); }
-        .sidebar-btn:hover, .sidebar-btn.active { color: var(--text-main); background-color: rgba(255,255,255,0.06); }
-
-        .layout-wrapper { flex-grow: 1; display: flex; position: relative; z-index: 10; height: 100vh; overflow: hidden; }
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            display: flex;
+            min-height: 100vh;
+        }
         
-        .lecture-nav { width: 240px; border-right: 1px solid var(--border-color); padding: 40px 20px; display: flex; flex-direction: column; gap: 25px; flex-shrink: 0; background: rgba(11, 11, 13, 0.5); backdrop-filter: blur(10px); }
-        .nav-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-        .nav-links { display: flex; flex-direction: column; gap: 8px; list-style: none; }
-        .nav-item a { display: block; padding: 8px 12px; border-radius: 8px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.2s; }
-        .nav-item a:hover { color: var(--text-main); background: rgba(255,255,255,0.04); }
-        .nav-item.active a { color: #fff; background: rgba(92, 219, 125, 0.15); border: 1px solid rgba(92, 219, 125, 0.25); }
+        .sidebar { 
+            width: 260px; 
+            background-color: var(--bg-sidebar); 
+            border-right: 1px solid var(--border-color); 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+        .sidebar-title { 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-muted); 
+        }
+        .menu-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            list-style: none; 
+        }
+        .menu-link { 
+            display: block; 
+            padding: 12px 16px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            transition: all 0.2s; 
+        }
+        .menu-link:hover { 
+            color: #fff; 
+            background-color: rgba(255,255,255,0.03); 
+        }
+        .menu-link.active-blue { 
+            background-color: var(--color-lecture); 
+            color: var(--text-lecture); 
+        }
 
-        .content-area { flex-grow: 1; padding: 40px 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; }
-        .content-area::-webkit-scrollbar { width: 6px; }
-        .content-area::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
-
-        .breadcrumbs { font-size: 13px; color: var(--text-muted); font-weight: 500; }
-        .breadcrumbs a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-        .breadcrumbs a:hover { color: var(--accent-green); }
-
-        .lecture-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.3; }
-        .lecture-header .meta { font-size: 14px; color: var(--text-muted); font-weight: 500; }
-
-        .lecture-section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 40px; }
-        .lecture-section h2 { font-size: 20px; font-weight: 700; border-left: 3px solid var(--accent-green); padding-left: 12px; margin-bottom: 4px; margin-top: 10px; }
-        .lecture-section p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.7; text-align: justify; }
+        .main-content { 
+            margin-left: 260px;
+            padding: 50px 60px 100px 60px; 
+            max-width: 900px; 
+            width: calc(100% - 260px);
+            display: block;
+        }
+        .back-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 600; 
+            margin-bottom: 25px; 
+            transition: color 0.2s; 
+        }
+        .back-link:hover { 
+            color: #fff; 
+        }
+        .meta-info { 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 0.5px; 
+            margin-bottom: 10px; 
+        }
         
-        .term { font-weight: 600; color: var(--accent-neon); background: rgba(92,219,125,0.05); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(92,219,125,0.15); }
+        h1 { 
+            font-size: 32px; 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            margin-bottom: 35px; 
+            line-height: 1.2; 
+        }
+        h2 { 
+            font-size: 20px; 
+            font-weight: 700; 
+            margin: 40px 0 20px 0; 
+            padding-left: 15px; 
+            border-left: 3px solid var(--text-lecture); 
+            line-height: 1.4; 
+        }
+        p { 
+            color: rgba(255,255,255,0.85); 
+            font-size: 15px; 
+            line-height: 1.7; 
+            margin-bottom: 20px; 
+        }
         
-        .chem-formula { font-family: "Courier New", monospace; font-size: 18px; color: #fff; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 8px; border: 1px dashed var(--border-color); display: inline-block; margin: 5px 0; }
+        .concept-box { 
+            background: rgba(36, 51, 92, 0.15); 
+            border-radius: 0 12px 12px 0; 
+            padding: 24px; 
+            margin: 30px 0; 
+            border: 1px solid var(--border-color); 
+            border-left: 3px solid var(--text-lecture); 
+        }
+        .concept-title { 
+            font-size: 12px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: var(--text-lecture); 
+            letter-spacing: 0.5px; 
+            margin-bottom: 15px; 
+        }
 
-        .chem-box { background: var(--chem-bg); border-left: 3px solid var(--accent-green); border-top: 1px solid var(--chem-border); border-right: 1px solid var(--chem-border); border-bottom: 1px solid var(--chem-border); border-radius: 0 12px 12px 0; padding: 20px; margin: 10px 0; }
-        .chem-box h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--accent-neon); margin-bottom: 8px; letter-spacing: 0.5px; }
-        .chem-box p { font-size: 14px; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.6; }
-
-        .page-navigation { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 20px; margin-bottom: 40px; }
-        .nav-page-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 10px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
-        .nav-page-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .list-unstyled { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            list-style: none; 
+        }
+        .list-unstyled li { 
+            position: relative; 
+            padding-left: 20px; 
+            color: rgba(255,255,255,0.85); 
+            font-size: 15px; 
+            line-height: 1.6; 
+        }
+        .list-unstyled li::before { 
+            content: "•"; 
+            color: var(--text-lecture); 
+            font-weight: bold; 
+            position: absolute; 
+            left: 0; 
+        }
+        
+        .table-style {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 14px;
+        }
+        .table-style th, .table-style td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+        .table-style th {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--text-lecture);
+            font-weight: 700;
+        }
+        .table-style td {
+            color: rgba(255, 255, 255, 0.85);
+        }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
     <div class="sidebar">
-        <a href="index.html" class="sidebar-btn logo">📚</a>
-        <a href="notes.html" class="sidebar-btn active">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-        </a>
-        <a href="tools.html" class="sidebar-btn" title="Инструменты">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-        </a>
+        <div class="sidebar-title">Содержание</div>
+        <ul class="menu-list">
+            <li><a href="lecture-chem1.html" class="menu-link active-blue">Л1: Введение и строение атома</a></li>
+            <li><a href="lecture-chem2.html" class="menu-link">Л2: Квантовая модель</a></li>
+        </ul>
     </div>
+    
+    <div class="main-content">
+        <a href="notes-lectures.html" class="back-link">← Вернуться к лекциям</a>
+        <div class="meta-info">Неорганическая химия • Лекция №1</div>
+        
+        <!-- ИСПРАВЛЕНО: СДЕЛАН ОБЩИЙ КРУПНЫЙ ЗАГОЛОВК ПО АНАЛОГИИ С ИСТОРИЕЙ -->
+        <h1>Конспекты лекций по Неорганической химии</h1>
 
-    <div class="layout-wrapper">
-        <div class="lecture-nav">
-            <span class="nav-title">Содержание</span>
-            <ul class="nav-links">
-                <li class="nav-item active"><a href="#sec1">1. Строение атома</a></li>
-                <li class="nav-item"><a href="#sec2">2. Квантовые числа</a></li>
-                <li class="nav-item"><a href="#sec3">3. Постулаты Бора</a></li>
-            </ul>
+        <!-- ИСПРАВЛЕНО: ТЕМА ЛЕКЦИИ ТЕПЕРЬ ВЫДЕЛЕНА СИНЕЙ ЛИНИЕЙ СЛЕВА -->
+        <h2>Лекция 1. Введение в химию. Строение атома</h2>
+
+        <p style="margin-top: 20px;"><strong>1. Предмет химии и её задачи</strong></p>
+        <ul class="list-unstyled">
+            <li><strong>Что такое химия:</strong> Химия — это фундаментальная наука о веществах, изучающая их состав, строение, свойства, а также процессы их превращения, сопровождающиеся изменением состава и структуры.</li>
+            <li><strong>What такое вещество:</strong> Вещество — это всё то, что имеет массу и объём.</li>
+            <li><strong>Химическая формула:</strong> Это своего рода шифр конкретного вещества. Формула содержит в себе информацию о составе, структуре и реакционной способности вещества. Главная задача курса — научиться расшифровывать эту информацию.</li>
+            <li><strong>Задачи химии в современном мире:</strong>
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">• Экологическое и рациональное использование производственного сырья.</p>
+                <p style="margin-bottom: 5px; color: rgba(255,255,255,0.85);">• Утилизация необходимых продуктов и отходов промышленного производства.</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">• Разработка принципиально новых способов получения и глубокой очистки различных веществ.</p>
+            </li>
+            <li><strong>Исходное сырье:</strong> Природные полезные ископаемые (руды, соли, каменный уголь) служат ключевыми материалами, из которых на заводах получают самые разные чистые вещества.</li>
+        </ul>
+
+        <h2>2. Классификация веществ: чистые вещества и смеси</h2>
+        <ul class="list-unstyled">
+            <li><strong>Общая схема:</strong> Все вещества глобально делятся на две группы: чистые вещества и смеси. Чистые вещества, в свою очередь, разделяются на элементы (состоят из атомов одного вида) и соединения (состоят из двух и более элементов).</li>
+            <li><strong>Смеси в природе:</strong> В чистом виде вещества встречаются в природе крайне редко. Чаще всего они представляют собой смеси, состоящие из большого числа различных компонентов. При анализе всегда указывается, какие примеси и в каком количестве содержатся в основном веществе.</li>
+            <li><strong>Химически чистые вещества:</strong> Если количество сопутствующих примесей ничтожно мало и они не могут послужить помехой при научных исследованиях, то такое вещество называют химически чистым (например, квалификация Х.Ч.). Абсолютно чистых веществ в природе нет.</li>
+        </ul>
+
+        <h2>3. Различия между механическими смесями и соединениями</h2>
+        <ul class="list-unstyled">
+            <li><strong>Механическая смесь:</strong> Если просто смешать порошок серы и порошок железа (Fe), получится однородная механическая смесь. При этом оба компонента полностью сохраняют свои исходные индивидуальные свойства.</li>
+            <li><strong>Химическое соединение:</strong> Если эту же смесь (состоящую из 4 частей серы и 7 частей железа) нагреть, то произойдет полноценная химическая реакция. В результате образуется совершенно новое вещество — сульфид железа (FeS).</li>
+            <li><strong>Итог реакции:</strong> После завершения реакции сера и железо перестают существовать как два отдельных независимых вещества, образуя единое химическое соединение с новыми свойствами.</li>
+        </ul>
+
+        <h2>4. Основные законы химии</h2>
+        <ul class="list-unstyled">
+            <li><strong>Закон постоянства вещества:</strong> Независимо от выбранного способа получения конкретного химического соединения, его весовой состав всегда остается абсолютно одним и тем же.</li>
+        <h2>6. Эволюция представлений об атоме. Модель Резерфорда</h2>
+        <ul class="list-unstyled">
+            <li><strong>Вклад Э. Резерфорда:</strong> Английский физик Эрнест Резерфорд заложил основы современного учения о радиоактивности и теории строения атома. Он открыл альфа- и бета-излучение короткоживущих изотопов радона, объяснил радиоактивность тория, создал теорию радиоактивного распада и обнаружил протон.</li>
+            <li><strong>Опыт с фольгой:</strong> Поставив знаменитый опыт по рассеянию альфа-частиц на тонкой металлической фольге, Резерфорд сделал вывод о существовании в центре атома массивного положительного ядра.</li>
+            <li><strong>Планетарная модель атома (1911 год):</strong> Резерфорд доказал существование атомного ядра и предложил «планетарную» схему строения атома, которая включает следующие пункты:
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">1. Атомы химических элементов имеют сложное внутреннее строение.</p>
+                <p style="margin-bottom: 5px; color: rgba(255,255,255,0.85);">2. В самом центре атома находится положительно заряженное ядро, занимающее ничтожную часть общего пространства внутри атома.</p>
+                <p style="margin-bottom: 5px; color: rgba(255,255,255,0.85);">3. Весь положительный заряд и почти вся масса атома сосредоточены в его ядре (масса электрона ничтожно мала и равна всего 1/1823 атомной единицы массы).</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">4. Вокруг ядра по замкнутым орбиталям непрерывно движутся электроны. Их общее число строго равно заряду ядра, поэтому атом в целом электронейтрален.</p>
+            </li>
+            <li><strong>Недостаток планетарной модели:</strong> Модель Резерфорда опиралась на законы классической механики. Исходя из них, электрон, вращающийся вокруг ядра и непрерывно излучающий энергию, должен был со временем полностью потерять её и неминуемо упасть на ядро (что опровергалось стабильностью реальных атомов).</li>
+        </ul>
+
+        <h2>7. Элементарные частицы атома и их характеристики</h2>
+        <p>Атом химического элемента состоит из положительно заряженного ядра и быстро движущихся отрицательно заряженных электронов. В ядре сосредоточена основная масса атома. Ядра состоят из нуклонов — протонов (p) и нейтронов (n).</p>
+        
+        <table class="table-style">
+            <thead>
+                <tr>
+                    <th>Частица</th>
+                    <th>Обозначение</th>
+                    <th>Заряд</th>
+                    <th>Масса (кг)</th>
+                    <th>Масса (а.е.м.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Протон</strong></td>
+                    <td>p</td>
+                    <td>+1</td>
+                    <td>1,6726 × 10<sup>-27</sup></td>
+                    <td>1,00728 (~1)</td>
+                </tr>
+                <tr>
+                    <td><strong>Нейтрон</strong></td>
+                    <td>n</td>
+                    <td>0</td>
+                    <td>1,6749 × 10<sup>-27</sup></td>
+                    <td>1,00867 (~1)</td>
+                </tr>
+                <tr>
+                    <td><strong>Электрон</strong></td>
+                    <td>e</td>
+                    <td>-1</td>
+                    <td>9,109 × 10<sup>-31</sup></td>
+                    <td>0,0005486 (~0)</td>
+                </tr>
+            </tbody>
+        </table>
+        <p><strong>Понятие а.е.м.:</strong> Атомная единица массы — это 1/12 часть массы наиболее распространенного естественного стабильного изотопа углерода <sup>12</sup>C.</p>
+
+        <h2>8. Структурный символ элемента и расчет частиц</h2>
+        <ul class="list-unstyled">
+            <li><strong>Химический элемент:</strong> Это совокупность атомов с абсолютно одинаковым зарядом ядра.</li>
+            <li><strong>Порядковый номер (Z):</strong> Заряд ядра атома равен количеству протонов в ядре. Он строго определяет порядковый номер элемента в периодической системе Менделеева.</li>
+            <li><strong>Массовое число (A):</strong> Общее число протонов и нейтронов в ядре называют массовым числом. Формула: <code>А = протоны + нейтроны</code>.</li>
+            <li><strong>Расчет количества нейтронов (n):</strong> Чтобы найти число нейтронов, нужно из атомной массы (А) вычесть порядковый номер (Z). Формула: <code>n = A - Z</code>.</li>
+        </ul>
+
+        <div class="concept-box">
+            <div class="concept-title">Пример расчета на атоме Железа (Fe)</div>
+            <p>• Структурный символ имеет вид: верхний индекс — массовое число (56), нижний индекс — заряд ядра (26).</p>
+            <p>• Количество протонов = 26, количество электронов = 26.</p>
+            <p>• Количество нейтронов = 56 - 26 = 30.</p>
+            <p style="margin-bottom: 0;">• Ядро атома железа содержит 56 элементарных частиц (нуклонов), а весь атом железа целиком содержит 82 элементарные частицы (56 в ядре + 26 электронов на орбитах).</p>
         </div>
 
-        <div class="content-area">
-            <div class="breadcrumbs">
-                <a href="notes.html">Архив</a> &gt; <a href="notes-lectures.html">Лекции</a> &gt; Неорганическая химия
-            </div>
+        <h2>9. Понятие об изотопах</h2>
+        <ul class="list-unstyled">
+            <li><strong>Определение:</strong> Разновидности одного и того же химического элемента, имеющие одинаковое число протонов, но разное число нейтронов, называются изотопами (от греческого «изос» — одинаковый, «топос» — место).</li>
+            <li><strong>Свойства изотопов:</strong> Изотопы имеют абсолютно одинаковое строение электронных оболочек и одинаковые химические свойства, но различаются между собой массовым числом (весом).</li>
+            <li><strong>Средняя атомная масса:</strong> Реальный химический элемент в природе является смесью изотопов с постоянным относительным содержанием. Поэтому экспериментально определяемая средняя атомная масса элемента в таблице Менделеева является средневзвешенной массой всех его природных изотопов.</li>
+        </ul>
 
-            <div class="lecture-header">
-                <h1>Лекция 1-2. Строение атома, квантовые числа и квантовая модель</h1>
-                <div class="meta">Предмет: Неорганическая химия • Модуль 1</div>
-            </div>
+        <div class="concept-box">
+            <div class="concept-title">Пример расчета средней массы Хлора (Cl)</div>
+            <p>В природе хлор состоит из двух основных изотопов: Хлор-35 (масса 35, содержание 75,53% или 0,7553) и Хлор-37 (масса 37, содержание 24,47% или 0,2447).</p>
+            <p style="margin-bottom: 0;"><strong>Расчет:</strong> <code>(35 × 0,7553) + (37 × 0,2447) = 26,435 + 9,054 = 35,45</code>. Именно это дробное число мы видим в таблице Менделеева.</p>
+        </div>
 
-            <!-- РАЗДЕЛ 1 -->
-            <div class="lecture-section" id="sec1">
-                <h2>1. Строение атома и элементарные частицы</h2>
-                <p>Современная химия опирается на квантово-механические представления о строении вещества. <span class="term">Атом</span> — это электронейтральная частица, состоящая из положительно заряженного атомного ядра и отрицательно заряженной электронной оболочки.</p>
-                <p>Ядро атома сосредоточивает в себе практически всю его массу и состоит из нуклонов — положительно заряженных протонов и нейтральных нейтронов. Масса электрона ничтожно мала по сравнению с массой нуклонов.</p>
-                
-                <div class="chem-box">
-                    <h4>Важное правило стабильности</h4>
-                    <p>Количество протонов в ядре строго определяет порядковый номер элемента в Периодической системе Менделеева и заряд самого ядра.</p>
-                </div>
-            </div>
+        <h2>10. Стабильные и радиоактивные изотопы. Метод ПЭТ</h2>
+        <ul class="list-unstyled">
+            <li><strong>Классификация:</strong> Изотопы глобально делятся на стабильные и радиоактивные. Радиоактивные изотопы склонны к самопроизвольному распаду с испусканием излучения.</li>
+            <li><strong>Разделение по периоду полураспада:</strong>
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">• <em>Долгоживущие:</em> Период полураспада составляет от 10 суток и более (например, уран, калий, плутоний).</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">• <em>Короткоживущие:</em> Период полураспада составляет менее 10 суток (тритий, астат-213, технеций-99, искусственный фтор-18 с периодом 2 часа).</p>
+            </li>
+            <li><strong>Применение в медицине (ПЭТ):</strong> Короткоживущие изотопы активно применяют в Позитронно-Эмиссионной Томографии (ПЭТ) для диагностики.</li>
+            <li><strong>Принцип работы ПЭТ:</strong>
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">1. В организм вводится радионуклид с позитронным типом распада. Внутри ядра один из протонов превращается в нейтрон, выбрасывая две частицы: электронное нейтрино и позитрон.</p>
+                <p style="margin-bottom: 5px; color: rgba(255,255,255,0.85);">2. Позитрон сталкивается со свободным электроном в тканях, происходит аннигиляция — их масса полностью превращается в энергию двух гамма-квантов (фотонов).</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">3. Приборы фиксируют траектории гамма-квантов и строят изображение мест накопления препарата. Метод ПЭТ позволяет наглядно увидеть патологические процессы на клеточном уровне.</p>
+            </li>
+        </ul>
 
-            <!-- РАЗДЕЛ 2 -->
-            <div class="lecture-section" id="sec2">
-                <h2>2. Квантовые числа электронов</h2>
-                <p>Состояние электрона в атоме описывается с помощью четырёх квантовых чисел. <span class="term">Главное квантовое число (n)</span> характеризует общую энергию электрона и размер электронного облака (принимает целые значения от 1 до бесконечности).</p>
-                <p>Орбитальное квантовое число определяет форму атомной орбитали (s, p, d, f). Магнитное квантовое число задает пространственную ориентацию орбитали, а спиновое — собственный момент импульса электрона.</p>
-                
-                <div style="text-align: center;">
-                    <div class="chem-formula">
-                        N = 2n² (Максимальное число электронов на уровне)
-                    </div>
-                </div>
-            </div>
-
-            <!-- РАЗДЕЛ 3 -->
-            <div class="lecture-section" id="sec3">
-                <h2>3. Постулаты Нильса Бора</h2>
-                <p>Переход от классической физики к квантовой начался с теории Нильса Бора. Его концепция базируется на утверждении, что электроны могут вращаться вокруг ядра только по строго определенным <span class="term">стационарным орбитам</span>, находясь на которых они не излучают и не поглощают энергию.</p>
-                <p>Излучение или поглощение кванта энергии (фотона) происходит только при переходе электрона с одной орбиты на другую.</p>
-            </div>
-
-            <div class="page-navigation">
+        <h2>11. Модель атома Нильса Бора</h2>
+        <ul class="list-unstyled">
+            <li><strong>Суть теории:</strong> Чтобы объяснить устойчивость атомов, Нильс Бор сформулировал свои знаменитые квантовые постулаты:
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">1. <em>Первый постулат:</em> Электроны в атоме движутся по определенным стационарным орбитам без излучения энергии.</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">2. <em>Второй постулат:</em> Излучение или поглощение энергии происходит только при скачкообразном переходе электрона с одной стационарной орбиты с энергией Е2 на другую орбиту с энергией Е1.</p>
+            </li>
+            <li><strong>Недостатки модели Бора:</strong> Несмотря на прорыв, теория Бора оставалась переходной и имела серьезные недостатки:
+                <p style="margin-top: 10px; margin-bottom: 5px; color: rgba(255,255,255,0.85);">1. Модель не могла физически объяснить, почему происходит квантование и почему электрон на орбите вдруг перестает излучать энергию вопреки классической электродинамике.</p>
+                <p style="margin-bottom: 5px; color: rgba(255,255,255,0.85);">2. Данные совпадали идеально только для простейших систем, содержащих всего один электрон (атом водорода Н). Для многоэлектронных атомов (даже Гелия) теория была неадекватна.</p>
+                <p style="margin-bottom: 0; color: rgba(255,255,255,0.85);">3. ...Теорию Бора оказалось абсолютно невозможным применить для объяснения природы химической связи между атомами.</p>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
