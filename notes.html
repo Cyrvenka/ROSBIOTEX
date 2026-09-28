@@ -19,14 +19,49 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
         
-        /* Узкая левая панель со значками */
-        .icon-bar { width: 50px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; flex-shrink: 0; height: 100vh; position: fixed; top: 0; bottom: 0; left: 0; z-index: 110; }
-        .icon-box { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: all 0.2s; font-size: 16px; border: 1px solid transparent; }
-        .icon-box:hover { color: #fff; background-color: rgba(255,255,255,0.03); }
-        .icon-box.active-folder { background-color: #24335c; color: #7096ff; }
-        .icon-box.active-db { border-color: var(--border-color); color: #fff; }
+        /* ИСПРАВЛЕНО: Жёсткие стили для левой панели со значками, чтобы они не уменьшались */
+        .icon-bar { 
+            width: 60px; 
+            background-color: var(--bg-sidebar); 
+            border-right: 1px solid var(--border-color); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 25px 0; 
+            gap: 20px; 
+            flex-shrink: 0; 
+            position: fixed; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            z-index: 110; 
+        }
+        
+        /* ИСПРАВЛЕНО: Размер шрифта увеличен до 22px, чтобы значки стали нормальными крупными кнопками */
+        .icon-box { 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            transition: all 0.2s; 
+            font-size: 22px; 
+            line-height: 1;
+            background-color: transparent;
+        }
+        .icon-box:hover { 
+            background-color: rgba(255, 255, 255, 0.04); 
+        }
+        .icon-box.active-folder { 
+            background-color: rgba(255, 255, 255, 0.03); 
+        }
+        .icon-box.active-db { 
+            background-color: #24335c; 
+        }
 
-        .main-container { margin-left: 50px; flex-grow: 1; padding: 60px 80px; max-width: 1000px; }
+        .main-container { margin-left: 60px; flex-grow: 1; padding: 60px 80px; max-width: 1000px; }
         h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px; }
         .sub-title { color: var(--text-muted); font-size: 14px; margin-bottom: 35px; }
         
@@ -47,7 +82,6 @@
     </style>
 </head>
 <body>
-    <!-- ИСПРАВЛЕНО: ЗНАЧОК МИКРОФОНА ПОЛНОСТЬЮ УБРАН ИЗ ПАНЕЛИ -->
     <div class="icon-bar">
         <a href="index.html" class="icon-box active-folder">📁</a>
         <a href="notes.html" class="icon-box active-db">🗄️</a>
