@@ -1,4 +1,3 @@
-<!-- Имя файла: notes-practices.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,13 +6,14 @@
     <title>Архив конспектов — Практика</title>
     <style>
         :root {
-            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --bg-card-hover: rgba(38, 38, 42, 0.75); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --bg-main: #0a0a0c; --bg-sidebar: #111113; --bg-card: rgba(26, 26, 26, 0.45); --border-color: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #7e7e86;
+            --color-lecture: #24335c; --text-lecture: #7096ff; --color-practice: #472d16; --text-practice: #ffa043; --color-lab: #1b3824; --text-lab: #5cdb7d;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; position: relative; width: 100vw; }
-
-        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(255,160,67,0.1) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; pointer-events: none; }
-        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(92,219,125,0.05) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; pointer-events: none; }
+        
+        .bg-glow-1 { position: absolute; width: 450px; height: 450px; background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -50px; z-index: 1; animation: floatGlow1 12s infinite alternate ease-in-out; pointer-events: none; }
+        .bg-glow-2 { position: absolute; width: 550px; height: 450px; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, rgba(0,0,0,0) 70%); bottom: -150px; left: 100px; z-index: 1; animation: floatGlow2 15s infinite alternate ease-in-out; pointer-events: none; }
         @keyframes floatGlow1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.15); } }
         @keyframes floatGlow2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, -50px) scale(1.1); } }
 
@@ -28,30 +28,23 @@
         .subtitle { color: var(--text-muted); font-size: 14px; }
         
         .sub-navigation { display: flex; gap: 10px; margin-bottom: 25px; background-color: var(--bg-sidebar); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; }
-        .sub-tab-link { flex-grow: 1; text-align: center; padding: 12px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-muted); }
-        .sub-tab-link.active { background-color: rgba(255, 255, 255, 0.08); color: #fff; }
+        .sub-tab-link { flex-grow: 1; text-align: center; padding: 12px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .sub-tab-link.tab-lectures { color: var(--text-lecture); }
+        .sub-tab-link.tab-practices { color: var(--text-practice); }
+        .sub-tab-link.tab-labs { color: var(--text-lab); }
+        .sub-tab-link:not(.active) { opacity: 0.4; }
+        .sub-tab-link.active { background-color: rgba(255, 255, 255, 0.08); opacity: 1 !important; }
         
         .scroll-container { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-bottom: 40px; }
-        .scroll-container::-webkit-scrollbar { width: 6px; }
-        .scroll-container::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
         
-        .card { display: flex; background-color: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; flex-direction: column; gap: 10px; position: relative; }
-        
+        /* Стили для недоступных карточек предметов */
+        .card.disabled { display: flex; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; flex-direction: column; gap: 10px; position: relative; opacity: 0.5; pointer-events: none; user-select: none; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
         .subject-title { font-size: 16px; font-weight: 600; line-height: 1.4; color: #fff; }
-        .tag { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; }
-        
+        .tag { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: uppercase; background: var(--color-practice); color: var(--text-practice); }
         .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; }
         .semester-info { font-size: 13px; color: var(--text-muted); }
-        .action-link { font-size: 13px; color: #7e7e86; font-weight: 600; cursor: pointer; text-decoration: none; }
-        .action-link:hover { text-decoration: underline; color: #fff; }
-
-        .practices-dropdown { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; gap: 8px; }
-        .practices-dropdown.open { max-height: 300px; margin-top: 15px; padding-top: 5px; }
-        
-        .practice-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 8px; color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 13.5px; transition: all 0.2s; }
-        .practice-item:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); color: #fff; padding-left: 18px; }
-        .practice-item span { font-size: 12px; color: var(--text-muted); }
+        .action-link { font-size: 13px; color: var(--text-muted); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -68,68 +61,37 @@
     <div class="main-content">
         <div class="header-area"><h1><a href="notes.html" style="text-decoration: none; color: inherit;">Архив конспектов</a></h1><div class="subtitle">1 курс • 1 семестр • Практические материалы</div></div>
         <div class="sub-navigation">
-            <a href="notes-lectures.html" class="sub-tab-link">Лекции</a>
-            <div class="sub-tab-link active">Практика</div>
-            <a href="notes-labs.html" class="sub-tab-link">Лабораторные</a>
+            <a href="notes-lectures.html" class="sub-tab-link tab-lectures">Лекции</a>
+            <div class="sub-tab-link tab-practices active">Практика</div>
+            <a href="notes-labs.html" class="sub-tab-link tab-labs">Лабораторные</a>
         </div>
         
         <div class="scroll-container">
-            <!-- ВЫСШАЯ МАТЕМАТИКА -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="subject-title">Высшая математика</div>
-                    <span class="tag" style="background: #472d16; color: #ffa043;">Вышмат</span>
-                </div>
-                <div class="card-footer">
-                    <span class="semester-info">1 семестр</span>
-                    <span class="action-link" onclick="toggleDropdown('math-prac')">Открыть практики →</span>
-                </div>
-                <div class="practices-dropdown" id="math-prac">
-                    <a href="#" class="practice-item" onclick="alert('Материал готовится!')">Практика 1. Вычисление матриц и определителей <span>В разработке</span></a>
-                </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">Высшая математика</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
             </div>
-
-            <!-- ИСТОРИЯ РОССИИ -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="subject-title">История России</div>
-                    <span class="tag" style="background: #241616; color: #ff4545;">История</span>
-                </div>
-                <div class="card-footer">
-                    <span class="semester-info">1 семестр</span>
-                    <span class="action-link" onclick="toggleDropdown('hist-prac')">Открыть практики →</span>
-                </div>
-                <div class="practices-dropdown" id="hist-prac">
-                    <a href="#" class="practice-item" onclick="alert('Материал готовится!')">Практика 1. Семинар по историографии <span>В разработке</span></a>
-                </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">Неорганическая химия</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
             </div>
-
-            <!-- ИНОСТРАННЫЙ ЯЗЫК -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="subject-title">Иностранный язык</div>
-                    <span class="tag" style="background: #1b3824; color: #5cdb7d;">Язык</span>
-                </div>
-                <div class="card-footer">
-                    <span class="semester-info">1 семестр</span>
-                    <span class="action-link" onclick="toggleDropdown('lang-prac')">Открыть практики →</span>
-                </div>
-                <div class="practices-dropdown" id="lang-prac">
-                    <a href="#" class="practice-item" onclick="alert('Материал готовится!')">Практика 1. Разговорный модуль 1 <span>В разработке</span></a>
-                </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">Основы российской государственности</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
+            </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">Спортивно-секционный модуль</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
+            </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">История России</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
+            </div>
+            <div class="card disabled">
+                <div class="card-header"><div class="subject-title">Иностранный язык</div><span class="tag">Практика</span></div>
+                <div class="card-footer"><span class="semester-info">1 семестр</span><span class="action-link">Материалы недоступны</span></div>
             </div>
         </div>
     </div>
-
-    <script>
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            const link = dropdown.previousElementSibling.querySelector('.action-link');
-            
-            if (dropdown.classList.contains('open')) {
-                dropdown.classList.remove('open');
-                link.innerText = 'Открыть практики →';
-            } else {
-                document.querySelectorAll('.practices-dropdown').forEach(el => el.classList.remove('open'));
-                document.querySelectorAll('.action-link').forEach(el => el.innerText = 'Открыть практики →');
-                
+</body>
+</html>
